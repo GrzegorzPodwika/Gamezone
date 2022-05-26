@@ -1,14 +1,11 @@
-import React, {useContext} from "react";
+import React from "react";
 import {Table, Icon} from "semantic-ui-react";
 import UserItem from "./UserItem";
 import axios from "axios";
 import {createNotification} from "../../helpers/Notification";
-import { UserContext } from "../helpers/UserContext";
-
-const { user } = useContext(UserContext);
+import {UserContext} from "../../helpers/UserContext";
 
 class Users extends React.Component {
-
 
     constructor() {
         super();
@@ -31,11 +28,12 @@ class Users extends React.Component {
     }
 
     getUsers = () => {
+
         axios
             .get("getUsers",  {
                 auth: {
-                    username: user.login,
-                    password: user.password
+                    username: {UserContext}.username,
+                    password: {UserContext}.password
                 }
             })
             .then((res) => {

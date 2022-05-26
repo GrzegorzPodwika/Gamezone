@@ -30,7 +30,7 @@ function UserItem(props) {
                 id: props.user.id,
             }, {
                 auth: {
-                    username: userData.login,
+                    username: userData.username,
                     password: userData.password
                 }
             })
@@ -50,7 +50,7 @@ function UserItem(props) {
         axios
             .post("editUser", {
                 id: userData.id,
-                login: userData.login,
+                username: userData.username,
                 email: userData.email,
                 firstName: userData.firstName,
                 lastName: userData.lastName,
@@ -60,7 +60,7 @@ function UserItem(props) {
                 role: userData.role,
             }, {
                 auth: {
-                    username: userData.login,
+                    username: userData.username,
                     password: userData.password
                 }
             })
@@ -81,7 +81,7 @@ function UserItem(props) {
     return (
         <Table.Row>
             <Table.Cell>{props.user.id}</Table.Cell>
-            <Table.Cell>{props.user.login}</Table.Cell>
+            <Table.Cell>{props.user.username}</Table.Cell>
             <Table.Cell>{props.user.email}</Table.Cell>
             <Table.Cell>{props.user.firstName}</Table.Cell>
             <Table.Cell>{props.user.lastName}</Table.Cell>

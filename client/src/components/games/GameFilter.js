@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import React, {useContext, useState} from "react";
 import { Form, Icon, Button } from "semantic-ui-react";
 import { createNotification } from "../../helpers/Notification";
 import "antd/dist/antd.css";
 import { DatePicker } from "antd";
 import axios from "axios";
+import {UserContext} from "../../helpers/UserContext";
 
 function GameFilter(props) {
+  const { user } = useContext(UserContext);
+
   const [gameData, setGameData] = useState({
     title: "",
     type: "",
@@ -67,7 +70,7 @@ function GameFilter(props) {
           dateTo: gameData.dateTo
         }, {
           auth: {
-            username: user.login,
+            username: user.username,
             password: user.password
           }
         })

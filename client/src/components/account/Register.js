@@ -3,17 +3,18 @@ import { Button, Form } from "semantic-ui-react";
 import { createNotification } from "../../helpers/Notification";
 import { Redirect } from "react-router-dom";
 import axios from "axios";
-import {UserContext} from "../../helpers/UserContext";
+import {Role} from "../../helpers/Role";
 
 function Register() {
   const [response,setResponse] = useState(false);
   const [registerData, setRegisterData] = useState({
-    login: "",
+    username: "",
     email: "",
     firstName: "",
     lastName: "",
     phone: "",
     password: "",
+    role: Role.User
   });
 
   const handleChange = (e) => {
@@ -24,7 +25,7 @@ function Register() {
   };
 
   const validateRegisterData = () => {
-    if (registerData.login.length <= 0) {
+    if (registerData.username.length <= 0) {
       createNotification("error", "Login jest wymagany");
       return false;
     } else if (registerData.email.length <= 0) {
@@ -63,7 +64,7 @@ function Register() {
           .catch((err) => {
             console.log(err);
             if (err.response !== undefined)
-              createNotification("error", err.response.data);
+              createNotification("error", "Rejestracja sie nie powiodla" + err.response.data);
           });
     }
   };
@@ -79,7 +80,7 @@ function Register() {
         <Form>
           <Form.Field>
             <label>Login</label>
-            <input placeholder="Login" name="login" onChange={handleChange} />
+            <input placeholder="Username" name="username" onChange={handleChange} />
           </Form.Field>
           <Form.Field>
             <label>Email</label>

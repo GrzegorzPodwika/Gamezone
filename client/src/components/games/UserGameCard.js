@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Card, Button, Icon } from "semantic-ui-react";
+import { Card, Button, Icon, Image } from "semantic-ui-react";
 import { UserContext } from "../../helpers/UserContext";
 import axios from "axios";
 import { createNotification } from "../../helpers/Notification";
@@ -10,11 +10,11 @@ function UserGameCard(props) {
   const deleteGame = () => {
     axios
       .post("deleteUserGame", {
-        userId: user.id,
-        gameId: props.game.id,
+        id: user.id,
+        game: props.game,
       }, {
           auth: {
-              username: user.login,
+              username: user.username,
               password: user.password
           }
       })
@@ -32,7 +32,8 @@ function UserGameCard(props) {
 
   return (
     <Card>
-      <Card.Content>
+        <Image src={props.game.url} wrapped ui={false} />
+        <Card.Content>
       <Card.Header>{props.game.title}</Card.Header>
         <Card.Meta>{props.game.type}</Card.Meta>
         <Card.Description>{props.game.platform}</Card.Description>

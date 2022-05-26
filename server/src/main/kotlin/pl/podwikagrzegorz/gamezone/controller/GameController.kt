@@ -9,6 +9,7 @@ import pl.podwikagrzegorz.gamezone.model.GameDTO
 import pl.podwikagrzegorz.gamezone.service.GameService
 
 @RestController
+@CrossOrigin("http://localhost:3000")
 class GameController(val gameService: GameService) {
 
     @PostMapping("/addGame")

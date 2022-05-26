@@ -9,10 +9,12 @@ import pl.podwikagrzegorz.gamezone.model.UserDTO
 import pl.podwikagrzegorz.gamezone.service.UserService
 
 @RestController
+@CrossOrigin("http://localhost:3000")
 class UserController(val userService: UserService) {
 
     @PostMapping("/login")
     fun login(@RequestParam("login") login: String, @RequestParam("password") password: String): ResponseEntity<User> {
+        println("dupa login $login password $password")
         val user = userService.findUser(login, password)
 
         return if(user == null)
@@ -34,9 +36,11 @@ class UserController(val userService: UserService) {
     }
 
     @PostMapping("/deleteUser")
-    fun deleteUser(@RequestBody user: User?): ResponseEntity<User> {
+    fun deleteUser(@RequestBody id: Long): ResponseEntity<User> {
+        val user = userService.findUserById(id)
+
         return if(user == null)
-            ResponseEntity(HttpStatus.BAD_REQUEST)
+            ResponseEntity.notFound().build()
         else {
             userService.remove(user)
             ResponseEntity(user, HttpStatus.OK)
@@ -48,12 +52,12 @@ class UserController(val userService: UserService) {
         return userService.getAllUsers()
     }
 
-    @GetMapping("/logout")
+/*    @GetMapping("/logout")
     fun logout(): Boolean {
         SessionState.user = null
 
         return true
-    }
+    }*/
 
     @PostMapping("/register")
     fun register(@RequestBody userDTO: UserDTO): Boolean {

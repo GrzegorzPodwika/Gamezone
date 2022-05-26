@@ -18,17 +18,17 @@ function UserProfile() {
       axios
         .post("editUser", {
           id: user.id,
-          login: user.login,
+          username: user.username,
           email: user.email,
           firstName: user.firstName,
           lastName: user.lastName,
           phone: user.phone,
           password: password,
-          games: user.games,
           role: user.role,
+          games: user.games,
         }, {
           auth: {
-            username: user.login,
+            username: user.username,
             password: user.password
           }
         })
@@ -60,7 +60,7 @@ function UserProfile() {
               placeholder="Login"
               name="login"
               readOnly={true}
-              value={user.login}
+              value={user.username}
             />
           </Form.Field>
           <Form.Field>
@@ -114,7 +114,7 @@ function UserProfile() {
               marginTop: 30,
               marginBottom: 5,
             }}
-          ></div>
+          />
           <Form.Field>
             <label>Nowe hasło</label>
             <input

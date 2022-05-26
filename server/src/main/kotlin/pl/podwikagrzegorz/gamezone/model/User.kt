@@ -9,7 +9,8 @@ data class User(
     val id: Long = 0,
 
     @get: NotBlank
-    val login: String = "",
+    @Column(nullable = false, unique = true)
+    val username: String = "",
 
     @get: NotBlank
     val email: String = "",

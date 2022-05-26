@@ -1,14 +1,14 @@
 import React, {useContext, useState} from "react";
-import { Button, Form } from "semantic-ui-react";
+import {Button, Dropdown, Form} from "semantic-ui-react";
 import { createNotification } from "../../helpers/Notification";
 import "antd/dist/antd.css";
 import { DatePicker } from "antd";
-import { useLocation } from "react-router";
 import axios from "axios";
 import {UserContext} from "../../helpers/UserContext";
+import {TYPES} from "../../helpers/GameType";
+import {PLATFORMS} from "../../helpers/Platform";
 
 function AddGame() {
-  const location = useLocation();
   const { user } = useContext(UserContext);
 
   const [gameData, setGameData] = useState({
@@ -46,6 +46,9 @@ function AddGame() {
     } else if (gameData.date.length <= 0) {
       createNotification("error", "Data jest wymagana");
       return false;
+    } else if (gameData.url.length <= 0) {
+      createNotification("error", "Url zdjęcia jest wymagany!");
+      return false;
     }
     return true;
   };
@@ -55,7 +58,7 @@ function AddGame() {
       axios
           .post("addGame", JSON.stringify(gameData), {
             auth: {
-              username: user.login,
+              username: user.username,
               password: user.password
             }
           })
@@ -84,14 +87,34 @@ function AddGame() {
           </Form.Field>
           <Form.Field>
             <label>Gatunek</label>
-            <input placeholder="Gatunek" name="type" onChange={handleChange} />
+            <Dropdown
+                name="type"
+                placeholder="Gatunek"
+                fluid
+                selection
+                options={TYPES}
+                defaultValue={TYPES[0].text}
+                onChange={handleChange}
+            />
           </Form.Field>
           <Form.Field>
             <label>Platforma</label>
+            <Dropdown
+                name="platform"
+                placeholder="Platforma"
+                fluid
+                selection
+                options={PLATFORMS}
+                defaultValue={PLATFORMS[0].text}
+                onChange={handleChange}
+            />
+          </Form.Field>
+          <Form.Field>
+            <label>Url Zdjęcia</label>
             <input
-              placeholder="Platforma"
-              name="platform"
-              onChange={handleChange}
+                placeholder="Url Zdjęcia"
+                name="url"
+                onChange={handleChange}
             />
           </Form.Field>
           <Form.Field>

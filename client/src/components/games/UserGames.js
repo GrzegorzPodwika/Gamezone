@@ -16,7 +16,7 @@ function UserGames() {
     axios
       .get(`getUserGames/${user.id}`, {
           auth: {
-              username: user.login,
+              username: user.username,
               password: user.password
           }
       })

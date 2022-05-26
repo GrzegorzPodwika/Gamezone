@@ -8,6 +8,7 @@ import { baseUrlServer } from "./helpers/ConstValues";
 
 axios.defaults.baseURL = baseUrlServer;
 axios.defaults.headers.post["Content-Type"] = "application/json";
+axios.defaults.withCredentials = false;
 
 ReactDOM.render(
   <BrowserRouter>

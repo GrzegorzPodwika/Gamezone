@@ -8,7 +8,7 @@ import axios from 'axios'
 function Login() {
     const {user, setUser} = useContext(UserContext);
     const [loginData, setLoginData] = useState({
-        login: "",
+        username: "",
         password: "",
     });
 
@@ -21,10 +21,12 @@ function Login() {
     };
 
     const sendLoginDataToAPI = (loginData) => {
-        axios.post('login', {
-            login: loginData.login,
-            password: loginData.password
-        }, {})
+        axios.post('login', null, {
+            headers: {
+                username: loginData.username,
+                password: loginData.password
+            }
+        })
             .then(res => {
                 if (res.status !== undefined && res.status === 200) {
                     setUser(res.data);
@@ -32,12 +34,15 @@ function Login() {
                 }
             })
             .catch(err => {
-                createNotification("error", err.response.data);
+                if (err.response !== undefined)
+                    createNotification("error", err.response.statusText);
+                else
+                    createNotification("error", "Błąd logowania")
             })
     }
 
     const handleLogin = () => {
-        if (loginData.login.length > 0 && loginData.password.length > 0) {
+        if (loginData.username.length > 0 && loginData.password.length > 0) {
             sendLoginDataToAPI(loginData);
         } else {
             createNotification("error", "Login i hasło są wymagane");
@@ -56,7 +61,7 @@ function Login() {
                 <Form>
                     <Form.Field>
                         <label>Login</label>
-                        <input placeholder="Login" name="login" onChange={handleChange}/>
+                        <input placeholder="Login" name="username" onChange={handleChange}/>
                     </Form.Field>
                     <Form.Field>
                         <label>Hasło</label>

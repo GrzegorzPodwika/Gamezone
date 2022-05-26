@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Card, Button, Icon, Modal, Header, Form } from "semantic-ui-react";
+import {Card, Button, Icon, Modal, Header, Form, Image} from "semantic-ui-react";
 import { DatePicker } from "antd";
 import { UserContext } from "../../helpers/UserContext";
 import axios from "axios";
@@ -35,15 +35,9 @@ function GameCard(props) {
 
   const handleEditGame = () => {
     axios
-      .post("editGame", {
-        id: gameData.id,
-        title: gameData.title,
-        type: gameData.type,
-        platform: gameData.platform,
-        date: gameData.date,
-      }, {
+      .post("editGame", JSON.stringify(gameData), {
         auth: {
-          username: user.login,
+          username: user.username,
           password: user.password
         }
       })
@@ -63,11 +57,11 @@ function GameCard(props) {
   const handleAddGame = () => {
     axios
       .post("addUserGame", {
-        userId: user.id,
-        gameId: props.game.id,
+        id: user.id,
+        game: props.game,
       }, {
         auth: {
-          username: user.login,
+          username: user.username,
           password: user.password
         }
       })
@@ -84,15 +78,9 @@ function GameCard(props) {
 
   const handleDeleteGame = () => {
     axios
-      .post("deleteGame", {
-        id: props.game.id,
-        title: props.game.title,
-        type: props.game.type,
-        platform: props.game.platform,
-        date: props.game.date,
-      }, {
+      .post("deleteGame", JSON.stringify(gameData), {
         auth: {
-          username: user.login,
+          username: user.username,
           password: user.password
         }
       })
@@ -110,6 +98,7 @@ function GameCard(props) {
 
   return (
     <Card>
+      <Image src={props.game.url} wrapped ui={false} />
       <Card.Content>
         <Card.Header>{props.game.title}</Card.Header>
         <Card.Meta>{props.game.type}</Card.Meta>

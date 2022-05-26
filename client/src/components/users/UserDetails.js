@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Form, Icon, Dropdown } from "semantic-ui-react";
 import {Role} from "../../helpers/Role";
 
@@ -21,7 +21,7 @@ function UserDetails(props) {
             <input
               placeholder="Login"
               name="login"
-              value={props.user.login}
+              value={props.user.username}
               onChange={props.handleChange}
             />
           </Form.Field>
