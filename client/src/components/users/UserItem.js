@@ -28,11 +28,6 @@ function UserItem(props) {
         axios
             .post("deleteUser", {
                 id: props.user.id,
-            }, {
-                auth: {
-                    username: userData.username,
-                    password: userData.password
-                }
             })
             .then((res) => {
                 if (res.status !== undefined && res.status === 200) {
@@ -58,11 +53,6 @@ function UserItem(props) {
                 password: userData.password,
                 games: userData.games,
                 role: userData.role,
-            }, {
-                auth: {
-                    username: userData.username,
-                    password: userData.password
-                }
             })
             .then((res) => {
                 if (res.status !== undefined && res.status === 200) {

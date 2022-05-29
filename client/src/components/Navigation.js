@@ -4,9 +4,10 @@ import { UserContext } from "../helpers/UserContext";
 import axios from "axios";
 import { createNotification } from "../helpers/Notification";
 import {Role} from "../helpers/Role";
+import {Logout} from "../helpers/AuthenticationService";
 
 function Navigation() {
-  const { user } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
 
   return (
     <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
@@ -40,12 +41,7 @@ function Navigation() {
                   href="/login"
                   onClick={() => {
                     axios
-                      .post("logout", null, {
-                        auth: {
-                          username: user.username,
-                          password: user.password
-                        }
-                      })
+                      .get("logout", null)
                       .then((res) => {
                         if (res.status !== undefined && res.status === 200) {
                           createNotification(
@@ -59,7 +55,8 @@ function Navigation() {
                           createNotification("error", err.response.data);
                       });
 
-                    localStorage.setItem("user", null);
+                    Logout()
+                    setUser(null)
                   }}
                 >
                   Wyloguj

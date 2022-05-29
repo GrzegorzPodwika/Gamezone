@@ -68,11 +68,6 @@ function GameFilter(props) {
           platform: gameData.platform,
           dateFrom: gameData.dateFrom,
           dateTo: gameData.dateTo
-        }, {
-          auth: {
-            username: user.username,
-            password: user.password
-          }
         })
         .then((res) => {
           if (res.status !== undefined && res.status === 200) {

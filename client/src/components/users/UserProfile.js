@@ -26,11 +26,6 @@ function UserProfile() {
           password: password,
           role: user.role,
           games: user.games,
-        }, {
-          auth: {
-            username: user.username,
-            password: user.password
-          }
         })
         .then((res) => {
           if (res.status !== undefined && res.status === 200) {

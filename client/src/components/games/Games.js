@@ -3,8 +3,6 @@ import "../Style.css";
 import GameFilter from "./GameFilter";
 import {Card, Icon, Table} from "semantic-ui-react";
 import GameCard from "./GameCard";
-import {useLocation} from "react-router";
-import UserItem from "../users/UserItem";
 import axios from "axios";
 import {createNotification} from "../../helpers/Notification";
 
@@ -24,11 +22,13 @@ class Games extends React.Component {
 
     getAllGames = () => {
         axios
-            .get("getAllGames",  null)
+            .get("getAllGames")
             .then((res) => {
+                console.log("getAllGames typeof " + (typeof res.data));
+
                 if (res.status !== undefined && res.status === 200) {
                     const fetchedGames = JSON.parse(res.data);
-                    console.log(fetchedGames);
+                    console.log("fetchedGames " + fetchedGames);
                     this.setState({games: fetchedGames.games});
                 }
             })

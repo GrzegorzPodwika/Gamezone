@@ -9,19 +9,18 @@ import pl.podwikagrzegorz.gamezone.model.UserDTO
 import pl.podwikagrzegorz.gamezone.service.UserService
 
 @RestController
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin(origins = ["http://localhost:3000"])
 class UserController(val userService: UserService) {
 
     @PostMapping("/login")
-    fun login(@RequestParam("login") login: String, @RequestParam("password") password: String): ResponseEntity<User> {
-        println("dupa login $login password $password")
-        val user = userService.findUser(login, password)
+    fun login(@RequestParam("username") username: String, @RequestParam("password") password: String): ResponseEntity<User> {
+        println("!!!!!!!!!!!!! /login $username $password ")
+        val user = userService.findUser(username, password)
 
         return if(user == null)
-            ResponseEntity(HttpStatus.BAD_REQUEST)
+            ResponseEntity.notFound().build()
         else {
-            SessionState.user = user
-            ResponseEntity(user, HttpStatus.OK)
+            ResponseEntity.ok(user)
         }
     }
 
@@ -52,12 +51,12 @@ class UserController(val userService: UserService) {
         return userService.getAllUsers()
     }
 
-/*    @GetMapping("/logout")
+    @GetMapping("/logout")
     fun logout(): Boolean {
         SessionState.user = null
 
         return true
-    }*/
+    }
 
     @PostMapping("/register")
     fun register(@RequestBody userDTO: UserDTO): Boolean {

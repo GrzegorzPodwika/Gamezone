@@ -12,11 +12,6 @@ function UserGameCard(props) {
       .post("deleteUserGame", {
         id: user.id,
         game: props.game,
-      }, {
-          auth: {
-              username: user.username,
-              password: user.password
-          }
       })
       .then((res) => {
         if (res.status !== undefined && res.status === 200) {

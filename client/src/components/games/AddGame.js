@@ -13,8 +13,8 @@ function AddGame() {
 
   const [gameData, setGameData] = useState({
     title: "",
-    type: "",
-    platform: "",
+    type: TYPES[0].text,
+    platform: PLATFORMS[0].text,
     url: "",
     date: "",
   });
@@ -24,6 +24,22 @@ function AddGame() {
       ...gameData,
       [e.target.name]: e.target.value,
     });
+  };
+
+  const handleGameTypeChange = (e, data) => {
+    console.log("e.target.name " + e.target.name +" type " + data.value)
+    setGameData({
+      ...gameData,
+      type: data.value,
+    });
+  };
+
+  const handlePlatformChange = (e, data) => {
+    console.log("e.target.name " + e.target.name +" platform " + data.value)
+        setGameData({
+          ...gameData,
+          platform: data.value,
+        });
   };
 
   const handleChangeDate = (date, dateString) => {
@@ -57,10 +73,7 @@ function AddGame() {
     if (validateGameData()) {
       axios
           .post("addGame", JSON.stringify(gameData), {
-            auth: {
-              username: user.username,
-              password: user.password
-            }
+
           })
           .then((res) => res.data)
           .then((res) => {
@@ -72,6 +85,7 @@ function AddGame() {
           })
           .catch((err) => {
             console.log(err);
+            createNotification("error", "Error " + err);
           });
     }
   };
@@ -88,25 +102,21 @@ function AddGame() {
           <Form.Field>
             <label>Gatunek</label>
             <Dropdown
-                name="type"
                 placeholder="Gatunek"
                 fluid
                 selection
                 options={TYPES}
-                defaultValue={TYPES[0].text}
-                onChange={handleChange}
+                onChange={handleGameTypeChange}
             />
           </Form.Field>
           <Form.Field>
             <label>Platforma</label>
             <Dropdown
-                name="platform"
                 placeholder="Platforma"
                 fluid
                 selection
                 options={PLATFORMS}
-                defaultValue={PLATFORMS[0].text}
-                onChange={handleChange}
+                onChange={handlePlatformChange}
             />
           </Form.Field>
           <Form.Field>
@@ -135,52 +145,6 @@ function AddGame() {
           </Button>
         </Form>
       </div>
-      {/*  {location.state !== undefined ? <div style={{ minWidth: "30vw" }}>
-        <h3 style={{ textAlign: "center" }}>Dodaj grę</h3>
-        <Form>
-          <Form.Field>
-            <label>Tytuł</label>
-            <input placeholder="Tytuł" name="title" onChange={handleChange} />
-          </Form.Field>
-          <Form.Field>
-            <label>Gatunek</label>
-            <input placeholder="Gatunek" name="type" onChange={handleChange} />
-          </Form.Field>
-          <Form.Field>
-            <label>Platforma</label>
-            <input
-                placeholder="Platforma"
-                name="platform"
-                onChange={handleChange}
-            />
-          </Form.Field>
-          <Form.Field>
-            <label>Data wydania</label>
-            <DatePicker
-                onChange={handleChangeDate}
-                style={{ width: "100%" }}
-                placeholder="Data wydania"
-            />
-          </Form.Field>
-          <Button
-              type="submit"
-              color="green"
-              onClick={handleAddGame}
-              style={{ width: "100%" }}
-          >
-            Potwierdź dodanie
-          </Button>
-        </Form>
-      </div> : <div>
-        <Box>
-       <h3 style={{color: '#a32626'}}>
-        Odmowa dostępu
-      </h3 >
-          <Text>
-            Aby uzyskać dostęp do tej funkcjonalności potrzebujesz uprawnień administratora.
-          </Text>
-        </Box>
-      </div>}*/}
     </div>
   );
 }

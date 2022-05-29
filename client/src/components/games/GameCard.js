@@ -35,12 +35,7 @@ function GameCard(props) {
 
   const handleEditGame = () => {
     axios
-      .post("editGame", JSON.stringify(gameData), {
-        auth: {
-          username: user.username,
-          password: user.password
-        }
-      })
+      .post("editGame", JSON.stringify(gameData))
       .then((res) => {
         if (res.status !== undefined && res.status === 200) {
           props.handleEditGame(res.data.games);
@@ -59,11 +54,6 @@ function GameCard(props) {
       .post("addUserGame", {
         id: user.id,
         game: props.game,
-      }, {
-        auth: {
-          username: user.username,
-          password: user.password
-        }
       })
       .then((res) => {
         if (res.status !== undefined && res.status === 200) {
@@ -78,12 +68,7 @@ function GameCard(props) {
 
   const handleDeleteGame = () => {
     axios
-      .post("deleteGame", JSON.stringify(gameData), {
-        auth: {
-          username: user.username,
-          password: user.password
-        }
-      })
+      .post("deleteGame", JSON.stringify(gameData))
       .then((res) => {
         if (res.status !== undefined && res.status === 200) {
           createNotification("success", "Pomyślnie usunięto grę");

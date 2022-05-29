@@ -4,6 +4,7 @@ import {createNotification} from "../../helpers/Notification";
 import {UserContext} from "../../helpers/UserContext";
 import {Redirect} from "react-router-dom";
 import axios from 'axios'
+import {ExecuteBasicAuthenticationService, RegisterSuccessfulLogin} from "../../helpers/AuthenticationService";
 
 function Login() {
     const {user, setUser} = useContext(UserContext);
@@ -20,22 +21,30 @@ function Login() {
         });
     };
 
-    const sendLoginDataToAPI = (loginData) => {
-        axios.post('login', null, {
-            headers: {
-                username: loginData.username,
-                password: loginData.password
-            }
-        })
-            .then(res => {
+    const sendLoginDataToAPI = () => {
+        const formData = new FormData()
+        formData.append("username", loginData.username);
+        formData.append("password", loginData.password);
+
+        ExecuteBasicAuthenticationService(formData)
+        .then(res => {
+                console.log("login res status: " + res.status + "data: " + res.data)
+
                 if (res.status !== undefined && res.status === 200) {
-                    setUser(res.data);
-                    localStorage.setItem('user', JSON.stringify(res.data));
+                    console.log("login status OK ")
+
+                    RegisterSuccessfulLogin(res.data)
+                    setUser(res.data)
                 }
             })
             .catch(err => {
-                if (err.response !== undefined)
-                    createNotification("error", err.response.statusText);
+                console.log("login error " + err)
+                if (err.response !== undefined) {
+                    if (err.response.status === 404)
+                        createNotification("error", "Użytkownik nie znaleziony!")
+                    else
+                        createNotification("error", "status: " + err.response.status);
+                }
                 else
                     createNotification("error", "Błąd logowania")
             })

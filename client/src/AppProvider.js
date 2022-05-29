@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import { UserContext } from "./helpers/UserContext";
+import {USER_SESSION_ATTRIBUTE} from "./helpers/AuthenticationService";
 
 function AppProvider(props) {
   const getCurrentUser = () => {
-    return JSON.parse(localStorage.getItem("user"));
+    const currentUser = JSON.parse(sessionStorage.getItem(USER_SESSION_ATTRIBUTE))
+    console.log("AppProvider currentUser " + currentUser);
+    return currentUser;
   };
 
   const [user, setUser] = useState(getCurrentUser());

@@ -15,6 +15,7 @@ import "semantic-ui-css/semantic.min.css";
 import AddGame from "./components/games/AddGame";
 import { PrivateRoute } from "./PrivateRoute";
 import { Role } from "./helpers/Role";
+import React from "react";
 
 function App() {
   return (

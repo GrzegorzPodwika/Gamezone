@@ -13,7 +13,7 @@ import javax.persistence.EntityExistsException
 @Service
 class UserService(val userRepository: UserRepository): UserDetailsService {
 
-    fun findUser(login: String, password: String) = userRepository.findByUsernameAndPassword(login, password)
+    fun findUser(username: String, password: String) = userRepository.findByUsernameAndPassword(username, password)
 
     fun findUserById(id: Long): User? = userRepository.findByIdOrNull(id)
 
@@ -39,13 +39,13 @@ class UserService(val userRepository: UserRepository): UserDetailsService {
     fun getAllUsers(): List<User> = userRepository.findAll()
 
     override fun loadUserByUsername(username: String): UserDetails {
-        println("dupa loadUserByUsername '$username' ")
+        println("loadUserByUsername '$username' ")
 
         return userRepository.findByUsername(username)
             .map { user -> org.springframework.security.core.userdetails.User(
                 user.username,
                 user.password,
                 listOf(SimpleGrantedAuthority(user.role))
-            ) }.orElseThrow{EntityExistsException("User $username doesn't exist in database.")}
+            ) }.orElseThrow{ EntityExistsException("User $username doesn't exist in database.") }
     }
 }

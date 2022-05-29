@@ -28,14 +28,8 @@ class Users extends React.Component {
     }
 
     getUsers = () => {
-
         axios
-            .get("getUsers",  {
-                auth: {
-                    username: {UserContext}.username,
-                    password: {UserContext}.password
-                }
-            })
+            .get("getUsers")
             .then((res) => {
                 if (res.status !== undefined && res.status === 200) {
                     const fetchedUsers = JSON.parse(res.data);
