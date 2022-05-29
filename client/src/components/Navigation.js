@@ -1,10 +1,9 @@
 import React, { useContext } from "react";
 import { Navbar, Container, Nav } from "react-bootstrap";
 import { UserContext } from "../helpers/UserContext";
-import axios from "axios";
 import { createNotification } from "../helpers/Notification";
 import {Role} from "../helpers/Role";
-import {Logout} from "../helpers/AuthenticationService";
+import {AxiosClient, Logout} from "../helpers/AuthenticationService";
 
 function Navigation() {
   const { user, setUser } = useContext(UserContext);
@@ -40,7 +39,7 @@ function Navigation() {
                 <Nav.Link
                   href="/login"
                   onClick={() => {
-                    axios
+                    AxiosClient()
                       .get("logout", null)
                       .then((res) => {
                         if (res.status !== undefined && res.status === 200) {

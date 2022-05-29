@@ -3,7 +3,6 @@ import {Button, Form} from "semantic-ui-react";
 import {createNotification} from "../../helpers/Notification";
 import {UserContext} from "../../helpers/UserContext";
 import {Redirect} from "react-router-dom";
-import axios from 'axios'
 import {ExecuteBasicAuthenticationService, RegisterSuccessfulLogin} from "../../helpers/AuthenticationService";
 
 function Login() {

@@ -1,9 +1,9 @@
 import React, { useContext, useState } from "react";
 import { UserContext } from "../../helpers/UserContext";
 import { Form, Icon, Button } from "semantic-ui-react";
-import axios from "axios";
 import { createNotification } from "../../helpers/Notification";
 import {Role} from "../../helpers/Role";
+import {AxiosClient} from "../../helpers/AuthenticationService";
 
 function UserProfile() {
   const { user } = useContext(UserContext);
@@ -15,7 +15,7 @@ function UserProfile() {
   };
   const handleSubmitPassword = () => {
     if (password.length > 0) {
-      axios
+      AxiosClient()
         .post("editUser", {
           id: user.id,
           username: user.username,

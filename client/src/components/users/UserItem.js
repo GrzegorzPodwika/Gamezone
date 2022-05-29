@@ -2,8 +2,8 @@ import React, {useState} from "react";
 import {Table, Modal, Button, Header, Icon} from "semantic-ui-react";
 import {AiFillEdit, AiFillDelete} from "react-icons/ai";
 import UserDetails from "./UserDetails";
-import axios from "axios";
 import {createNotification} from "../../helpers/Notification";
+import {AxiosClient} from "../../helpers/AuthenticationService";
 
 function UserItem(props) {
     const [openModal, setOpenModal] = useState(false);
@@ -25,7 +25,7 @@ function UserItem(props) {
 
 
     const deleteUser = () => {
-        axios
+        AxiosClient()
             .post("deleteUser", {
                 id: props.user.id,
             })
@@ -42,7 +42,7 @@ function UserItem(props) {
     };
 
     const editUser = () => {
-        axios
+        AxiosClient()
             .post("editUser", {
                 id: userData.id,
                 username: userData.username,

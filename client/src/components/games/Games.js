@@ -1,13 +1,12 @@
 import React from "react";
 import "../Style.css";
 import GameFilter from "./GameFilter";
-import {Card, Icon, Table} from "semantic-ui-react";
+import {Card, Icon} from "semantic-ui-react";
 import GameCard from "./GameCard";
-import axios from "axios";
 import {createNotification} from "../../helpers/Notification";
+import {AxiosClient} from "../../helpers/AuthenticationService";
 
 class Games extends React.Component {
-    //location = useLocation();
 
     constructor(props) {
         super(props);
@@ -21,15 +20,11 @@ class Games extends React.Component {
     }
 
     getAllGames = () => {
-        axios
+        AxiosClient()
             .get("getAllGames")
             .then((res) => {
-                console.log("getAllGames typeof " + (typeof res.data));
-
                 if (res.status !== undefined && res.status === 200) {
-                    const fetchedGames = JSON.parse(res.data);
-                    console.log("fetchedGames " + fetchedGames);
-                    this.setState({games: fetchedGames.games});
+                    this.setState({games: res.data});
                 }
             })
             .catch((err) => {

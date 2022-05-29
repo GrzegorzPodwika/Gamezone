@@ -2,10 +2,10 @@ import React, { useContext, useState } from "react";
 import {Card, Button, Icon, Modal, Header, Form, Image} from "semantic-ui-react";
 import { DatePicker } from "antd";
 import { UserContext } from "../../helpers/UserContext";
-import axios from "axios";
 import { createNotification } from "../../helpers/Notification";
 import moment from "moment";
 import {Role} from "../../helpers/Role";
+import {AxiosClient} from "../../helpers/AuthenticationService";
 
 function GameCard(props) {
   const { user } = useContext(UserContext);
@@ -34,7 +34,7 @@ function GameCard(props) {
   };
 
   const handleEditGame = () => {
-    axios
+    AxiosClient()
       .post("editGame", JSON.stringify(gameData))
       .then((res) => {
         if (res.status !== undefined && res.status === 200) {
@@ -50,7 +50,7 @@ function GameCard(props) {
   };
 
   const handleAddGame = () => {
-    axios
+    AxiosClient()
       .post("addUserGame", {
         id: user.id,
         game: props.game,
@@ -67,7 +67,7 @@ function GameCard(props) {
   };
 
   const handleDeleteGame = () => {
-    axios
+    AxiosClient()
       .post("deleteGame", JSON.stringify(gameData))
       .then((res) => {
         if (res.status !== undefined && res.status === 200) {

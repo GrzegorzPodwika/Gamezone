@@ -3,7 +3,7 @@ import {Table, Icon} from "semantic-ui-react";
 import UserItem from "./UserItem";
 import axios from "axios";
 import {createNotification} from "../../helpers/Notification";
-import {UserContext} from "../../helpers/UserContext";
+import {AxiosClient} from "../../helpers/AuthenticationService";
 
 class Users extends React.Component {
 
@@ -28,7 +28,7 @@ class Users extends React.Component {
     }
 
     getUsers = () => {
-        axios
+        AxiosClient()
             .get("getUsers")
             .then((res) => {
                 if (res.status !== undefined && res.status === 200) {
