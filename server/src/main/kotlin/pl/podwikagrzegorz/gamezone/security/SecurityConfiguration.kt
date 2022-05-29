@@ -32,7 +32,7 @@ class SecurityConfiguration: WebSecurityConfigurerAdapter() {
             .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS,"/**").permitAll()
                 .antMatchers("/", "/logout", "/register", "/getAllGames", "/login").permitAll()
-                .antMatchers("/deleteUser", "/getUsers", "/addGame", "/editGame", "/deleteGame").hasRole(Role.ADMIN)
+                .antMatchers("/deleteUser", "/getUsers", "/addGame", "/editGame", "/deleteGame").hasAuthority(Role.ADMIN)
                 .anyRequest().authenticated()
             .and()
             .httpBasic()
