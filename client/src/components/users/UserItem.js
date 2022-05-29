@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Table, Modal, Button, Header, Icon} from "semantic-ui-react";
+import {Table, Modal, Button, Header, Icon, Confirm} from "semantic-ui-react";
 import {AiFillEdit, AiFillDelete} from "react-icons/ai";
 import UserDetails from "./UserDetails";
 import {createNotification} from "../../helpers/Notification";
@@ -8,6 +8,8 @@ import {AxiosClient} from "../../helpers/AuthenticationService";
 function UserItem(props) {
     const [openModal, setOpenModal] = useState(false);
     const [userData, setUserData] = useState(props.user);
+    const [open, setOpenDialog] = useState(false)
+
 
     const handleChange = (e) => {
         setUserData({
@@ -23,21 +25,21 @@ function UserItem(props) {
         });
     };
 
+    const showDeletionDialog = () => {
+        setOpenDialog(true)
+    }
 
     const deleteUser = () => {
         AxiosClient()
-            .post("deleteUser", {
-                id: props.user.id,
-            })
-            .then((res) => {
+            .post("deleteUser", props.user).then((res) => {
                 if (res.status !== undefined && res.status === 200) {
-                    props.handleDeleteUser(res.data.users);
+                    props.handleDeleteUser(res.data);
                     createNotification("info", "Usunięto użytkowika");
                 }
             })
             .catch((err) => {
                 if (err.response !== undefined)
-                    createNotification("error", err.response.data);
+                    createNotification("error", err.response.status);
             });
     };
 
@@ -56,14 +58,14 @@ function UserItem(props) {
             })
             .then((res) => {
                 if (res.status !== undefined && res.status === 200) {
-                    props.handleEditUser(res.data.users);
+                    props.handleEditUser(res.data);
                     createNotification("info", "Pomyślnie edytowano użytkownika");
                     setOpenModal(false);
                 }
             })
             .catch((err) => {
                 if (err.response !== undefined)
-                    createNotification("error", err.response.data);
+                    createNotification("error", err.response.status);
             });
 
     }
@@ -122,9 +124,23 @@ function UserItem(props) {
                         color: "red",
                         cursor: "pointer",
                     }}
-                    onClick={deleteUser}
+                    onClick={showDeletionDialog}
                 />{" "}
                 Usuń
+                <Confirm
+                    style={{
+                        height: "auto",
+                        width: "auto",
+                        left: "auto",
+                        bottom: "auto",
+                        right: "auto",
+                        top: "auto",
+                    }}
+                    content="Czy jesteś pewien?"
+                    open={open}
+                    onConfirm={deleteUser}
+                    onCancel={()=> setOpenDialog(false)}
+                />
             </Table.Cell>
         </Table.Row>
     );

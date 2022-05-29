@@ -73,6 +73,7 @@ function AddGame() {
                 .then((res) => {
                     if (res !== null) {
                         createNotification("info", "Gra została pomyślnie dodana");
+                        clearFields()
                     } else {
                         createNotification("error", "Wystąpił błąd");
                     }
@@ -83,6 +84,17 @@ function AddGame() {
                 });
         }
     };
+
+    const clearFields = () => {
+        setGameData({
+            title: "",
+            type: "",
+            platform: "",
+            url: "",
+            date: ""
+        });
+
+    }
 
     return (
         <div className="card-app">

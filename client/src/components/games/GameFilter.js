@@ -53,7 +53,7 @@ function GameFilter(props) {
         })
         .catch((err) => {
           if (err.response !== undefined)
-            createNotification("error", err.response.data);
+            createNotification("error", err.response.status);
         })
   }
 

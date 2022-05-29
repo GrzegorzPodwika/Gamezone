@@ -1,18 +1,15 @@
 import React, { useContext } from "react";
 import { Card, Button, Icon, Image } from "semantic-ui-react";
 import { UserContext } from "../../helpers/UserContext";
-import axios from "axios";
 import { createNotification } from "../../helpers/Notification";
+import {AxiosClient} from "../../helpers/AuthenticationService";
 
 function UserGameCard(props) {
   const { user } = useContext(UserContext);
 
   const deleteGame = () => {
-    axios
-      .post("deleteUserGame", {
-        id: user.id,
-        game: props.game,
-      })
+    AxiosClient()
+      .post(`deleteUserGame/${user.id}`, props.game)
       .then((res) => {
         if (res.status !== undefined && res.status === 200) {
           createNotification("success", "Pomyślnie usunięto grę");
@@ -21,7 +18,12 @@ function UserGameCard(props) {
       })
       .catch((err) => {
         if (err.response !== undefined)
-          createNotification("error", err.response.data);
+            if (err.response.status === 404)
+                createNotification("error", "Użytkownik albo gra nie została znaleziona!");
+            else if(err.response.status === 409)
+                createNotification("error", "Gra nie została usunięta!");
+            else
+                createNotification("error", err.response.status);
       });
   };
 

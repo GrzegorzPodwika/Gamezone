@@ -30,8 +30,8 @@ data class User(
     @get: NotBlank
     val role: String = Role.USER,
 
-    @OneToMany(targetEntity = Game::class)
-    var games: Set<Game> = emptySet()
+    @ManyToMany(cascade = [CascadeType.ALL], targetEntity = Game::class)
+    var games: MutableSet<Game> = mutableSetOf()
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -47,5 +47,4 @@ data class User(
     override fun hashCode(): Int {
         return id.hashCode()
     }
-
 }

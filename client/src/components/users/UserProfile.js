@@ -3,10 +3,10 @@ import { UserContext } from "../../helpers/UserContext";
 import { Form, Icon, Button } from "semantic-ui-react";
 import { createNotification } from "../../helpers/Notification";
 import {Role} from "../../helpers/Role";
-import {AxiosClient} from "../../helpers/AuthenticationService";
+import {AxiosClient, UpdateUser} from "../../helpers/AuthenticationService";
 
 function UserProfile() {
-  const { user } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
 
   const [password, setPassword] = useState("");
 
@@ -15,26 +15,29 @@ function UserProfile() {
   };
   const handleSubmitPassword = () => {
     if (password.length > 0) {
+      const updatedUser = {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        phone: user.phone,
+        password: password,
+        role: user.role,
+        games: user.games,
+      }
       AxiosClient()
-        .post("editUser", {
-          id: user.id,
-          username: user.username,
-          email: user.email,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          phone: user.phone,
-          password: password,
-          role: user.role,
-          games: user.games,
-        })
+        .post("editUser", updatedUser)
         .then((res) => {
           if (res.status !== undefined && res.status === 200) {
             createNotification("success", "Pomyślnie zmieniono hasło");
+            UpdateUser(updatedUser);
+            setUser(res.data)
           }
         })
         .catch((err) => {
           if (err.response !== undefined)
-            createNotification("error", err.response.data);
+            createNotification("error", err.response.status);
         });
     } else {
       createNotification("error", "Hasło nie może być puste");

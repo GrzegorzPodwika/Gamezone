@@ -64,7 +64,7 @@ function Register() {
           .catch((err) => {
             console.log(err);
             if (err.response !== undefined)
-              createNotification("error", "Rejestracja sie nie powiodla" + err.response.data);
+              createNotification("error", "Rejestracja sie nie powiodla" + err.response.status);
           });
     }
   };

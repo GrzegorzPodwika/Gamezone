@@ -23,8 +23,8 @@ class Users extends React.Component {
     }
 
 
-    handleEditUser = (newUsers) => {
-        this.setState({users : newUsers})
+    handleEditUser = (updatedUser) => {
+        this.getUsers()
     }
 
     getUsers = () => {
@@ -32,16 +32,14 @@ class Users extends React.Component {
             .get("getUsers")
             .then((res) => {
                 if (res.status !== undefined && res.status === 200) {
-                    const fetchedUsers = JSON.parse(res.data);
-                    console.log(fetchedUsers);
-                    this.setState({users: fetchedUsers.users});
+                    this.setState({users: res.data});
                 }
             })
             .catch((err) => {
                 console.log(err)
 
                 if (err.response !== undefined)
-                    createNotification("error", err.response.data);
+                    createNotification("error", err.response.status);
             });
     }
 

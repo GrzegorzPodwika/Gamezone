@@ -1,9 +1,6 @@
 package pl.podwikagrzegorz.gamezone.model
 
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
+import javax.persistence.*
 import javax.validation.constraints.NotBlank
 
 @Entity(name = "games")
@@ -24,7 +21,7 @@ data class Game(
     val url: String? = null,
 
     @get: NotBlank
-    val date: String = ""
+    val date: String = "",
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -41,3 +38,5 @@ data class Game(
         return id.hashCode()
     }
 }
+
+

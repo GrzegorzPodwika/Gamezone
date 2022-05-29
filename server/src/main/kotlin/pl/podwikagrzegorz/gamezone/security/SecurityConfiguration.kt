@@ -35,6 +35,8 @@ class SecurityConfiguration: WebSecurityConfigurerAdapter() {
                 .antMatchers("/deleteUser", "/getUsers", "/addGame", "/editGame", "/deleteGame").hasAuthority(Role.ADMIN)
                 .anyRequest().authenticated()
             .and()
+            .logout()
+            .and()
             .httpBasic()
 
         http.csrf().disable()

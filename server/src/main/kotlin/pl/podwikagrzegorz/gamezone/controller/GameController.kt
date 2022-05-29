@@ -18,12 +18,12 @@ class GameController(val gameService: GameService) {
     }
 
     @PostMapping("/editGame")
-    fun editGame(@RequestBody game: Game): ResponseEntity<Game> {
-        val updatedGame = gameService.editGame(game)
-        return if (updatedGame == null)
+    fun editGame(@RequestBody game: Game): ResponseEntity<List<Game>> {
+        val updatedGames = gameService.editGame(game)
+        return if (updatedGames == null)
             ResponseEntity.notFound().build()
         else
-            ResponseEntity(updatedGame, HttpStatus.OK)
+            ResponseEntity(updatedGames, HttpStatus.OK)
     }
 
     @PostMapping("/deleteGame")
@@ -46,32 +46,18 @@ class GameController(val gameService: GameService) {
     }
 
     @GetMapping("/getUserGames/{id}")
-    fun getUserGames(@PathVariable(value = "id") userId: Long): ResponseEntity<List<Game>> {
-        val userGames = gameService.getUserGames(userId)
-        return if(userGames == null) {
-            ResponseEntity.notFound().build()
-        } else {
-            ResponseEntity.ok(userGames)
-        }
-    }
+    fun getUserGames(@PathVariable(value = "id") userId: Long): ResponseEntity<List<Game>> =
+        gameService.getUserGames(userId)
 
     @PostMapping("/addUserGame/{id}")
-    fun addUserGame(@PathVariable(value = "id") userId: Long,
-                    @RequestBody game: Game): ResponseEntity<List<Game>> {
-        val userGames = gameService.addUserGame(userId, game)
-        return if (userGames == null)
-            ResponseEntity.notFound().build()
-        else
-            ResponseEntity.ok(userGames)
-    }
+    fun addUserGame(
+        @PathVariable(value = "id") userId: Long,
+        @RequestBody game: Game
+    ): ResponseEntity<List<Game>> = gameService.addUserGame(userId, game)
 
     @PostMapping("/deleteUserGame/{id}")
-    fun deleteUserGame(@PathVariable(value = "id") userId: Long,
-                    @RequestBody game: Game): ResponseEntity<List<Game>> {
-        val userGames = gameService.deleteUserGame(userId, game)
-        return if (userGames == null)
-            ResponseEntity.notFound().build()
-        else
-            ResponseEntity.ok(userGames)
-    }
+    fun deleteUserGame(
+        @PathVariable(value = "id") userId: Long,
+        @RequestBody game: Game
+    ): ResponseEntity<List<Game>> = gameService.deleteUserGame(userId, game)
 }

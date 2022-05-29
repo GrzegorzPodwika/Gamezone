@@ -1,11 +1,13 @@
 import React, { useContext, useState } from "react";
-import {Card, Button, Icon, Modal, Header, Form, Image} from "semantic-ui-react";
+import {Card, Button, Icon, Modal, Header, Form, Image, Dropdown} from "semantic-ui-react";
 import { DatePicker } from "antd";
 import { UserContext } from "../../helpers/UserContext";
 import { createNotification } from "../../helpers/Notification";
 import moment from "moment";
 import {Role} from "../../helpers/Role";
 import {AxiosClient} from "../../helpers/AuthenticationService";
+import {PLATFORMS} from "../../helpers/Platform";
+import {TYPES} from "../../helpers/GameType";
 
 function GameCard(props) {
   const { user } = useContext(UserContext);
@@ -16,7 +18,8 @@ function GameCard(props) {
     title: props.game.title,
     type: props.game.type,
     platform: props.game.platform,
-    date: props.game.date,
+    url: props.game.url,
+    date: props.game.date
   });
 
   const handleChange = (e) => {
@@ -33,28 +36,39 @@ function GameCard(props) {
     });
   };
 
+  const handleGameTypeChange = (e, data) => {
+    setGameData({
+      ...gameData,
+      type: data.value,
+    });
+  };
+
+  const handlePlatformChange = (e, data) => {
+    setGameData({
+      ...gameData,
+      platform: data.value,
+    });
+  };
+
   const handleEditGame = () => {
     AxiosClient()
-      .post("editGame", JSON.stringify(gameData))
+      .post("editGame", gameData)
       .then((res) => {
         if (res.status !== undefined && res.status === 200) {
-          props.handleEditGame(res.data.games);
+          props.handleEditGame(res.data);
           createNotification("info", "Pomyślnie edytowano grę");
           setOpenModal(false);
         }
       })
       .catch((err) => {
         if (err.response !== undefined)
-          createNotification("error", err.response.data);
+          createNotification("error", err.response.status);
       });
   };
 
-  const handleAddGame = () => {
+  const handleAddUserGame = () => {
     AxiosClient()
-      .post("addUserGame", {
-        id: user.id,
-        game: props.game,
-      })
+      .post(`addUserGame/${user.id}`, props.game)
       .then((res) => {
         if (res.status !== undefined && res.status === 200) {
           createNotification("success", "Pomyślnie dodano grę");
@@ -62,22 +76,32 @@ function GameCard(props) {
       })
       .catch((err) => {
         if (err.response !== undefined)
-          createNotification("error", err.response.data);
+          if (err.response.status === 404)
+            createNotification("error", "Użytkownik albo gra nie została znaleziona!");
+          else if(err.response.status === 409)
+            createNotification("error", "Uzytkownik już posiada wybraną grę!");
+          else
+            createNotification("error", err.response.status);
       });
   };
 
   const handleDeleteGame = () => {
     AxiosClient()
-      .post("deleteGame", JSON.stringify(gameData))
+      .post('deleteGame', props.game)
       .then((res) => {
         if (res.status !== undefined && res.status === 200) {
           createNotification("success", "Pomyślnie usunięto grę");
-          props.handleDeleteGame(res.data.games);
+          props.handleDeleteGame(res.data);
         }
       })
       .catch((err) => {
         if (err.response !== undefined)
-          createNotification("error", err.response.data);
+          if (err.response.status === 404)
+            createNotification("error", "Użytkownik albo gra nie została znaleziona!");
+          else if(err.response.status === 409)
+            createNotification("error", "Gra nie została usunięta!");
+          else
+            createNotification("error", err.response.status);
       });
   };
 
@@ -92,7 +116,7 @@ function GameCard(props) {
       </Card.Content>
       {user ? (
         <Button.Group>
-          <Button primary onClick={handleAddGame}>
+          <Button primary onClick={handleAddUserGame}>
             Dodaj
           </Button>
           {user.role === Role.Admin ? (
@@ -128,20 +152,33 @@ function GameCard(props) {
                         </Form.Field>
                         <Form.Field>
                           <label>Gatunek</label>
-                          <input
-                            placeholder="Gatunek"
-                            name="type"
-                            onChange={handleChange}
-                            value={gameData.type}
+                          <Dropdown
+                              placeholder="Gatunek"
+                              fluid
+                              selection
+                              options={TYPES}
+                              onChange={handleGameTypeChange}
+                              value={gameData.type}
                           />
                         </Form.Field>
                         <Form.Field>
                           <label>Platforma</label>
+                          <Dropdown
+                              placeholder="Platforma"
+                              fluid
+                              selection
+                              options={PLATFORMS}
+                              onChange={handlePlatformChange}
+                              value={gameData.platform}
+                          />
+                        </Form.Field>
+                        <Form.Field>
+                          <label>Url zdjęcia</label>
                           <input
-                            placeholder="Platforma"
-                            name="platform"
-                            onChange={handleChange}
-                            value={gameData.platform}
+                              placeholder="Url"
+                              name="url"
+                              onChange={handleChange}
+                              value={gameData.url}
                           />
                         </Form.Field>
                         <Form.Field>

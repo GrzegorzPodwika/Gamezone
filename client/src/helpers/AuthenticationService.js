@@ -44,10 +44,9 @@ export const CreateBasicAuthToken = (username, password) => {
     return 'Basic ' + window.btoa(username + ":" + password);
 }
 
-export const RegisterSuccessfulLogin = (userObject) => {
-    console.log("registerSuccessfulLogin user: " + userObject + " username " + userObject.username + " password " + userObject.password);
+export const UpdateUser = (userObject) => {
+    console.log("registerSuccessfulLogin user: " + userObject + " username " + userObject.username);
     const convertedUser = JSON.stringify(userObject);
-    console.log("registerSuccessfulLogin convertedUser: " + convertedUser + " username " + convertedUser["username"]);
 
     sessionStorage.setItem(USER_SESSION_ATTRIBUTE, convertedUser);
     sessionStorage.setItem(TOKEN_ATTRIBUTE, CreateBasicAuthToken(userObject.username, userObject.password));

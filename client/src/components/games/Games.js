@@ -31,7 +31,7 @@ class Games extends React.Component {
                 console.log(err)
 
                 if (err.response !== undefined)
-                    createNotification("error", err.response.data);
+                    createNotification("error", err.response.status);
             });
     }
 

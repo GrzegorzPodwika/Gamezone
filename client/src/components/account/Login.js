@@ -3,7 +3,7 @@ import {Button, Form} from "semantic-ui-react";
 import {createNotification} from "../../helpers/Notification";
 import {UserContext} from "../../helpers/UserContext";
 import {Redirect} from "react-router-dom";
-import {ExecuteBasicAuthenticationService, RegisterSuccessfulLogin} from "../../helpers/AuthenticationService";
+import {ExecuteBasicAuthenticationService, UpdateUser} from "../../helpers/AuthenticationService";
 
 function Login() {
     const {user, setUser} = useContext(UserContext);
@@ -32,7 +32,7 @@ function Login() {
                 if (res.status !== undefined && res.status === 200) {
                     console.log("login status OK ")
 
-                    RegisterSuccessfulLogin(res.data)
+                    UpdateUser(res.data)
                     setUser(res.data)
                 }
             })

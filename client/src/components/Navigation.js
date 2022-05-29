@@ -40,7 +40,7 @@ function Navigation() {
                   href="/login"
                   onClick={() => {
                     AxiosClient()
-                      .get("logout", null)
+                      .get("logout")
                       .then((res) => {
                         if (res.status !== undefined && res.status === 200) {
                           createNotification(
@@ -51,7 +51,7 @@ function Navigation() {
                       })
                       .catch((err) => {
                         if (err.response !== undefined)
-                          createNotification("error", err.response.data);
+                          createNotification("error", err.response.status);
                       });
 
                     Logout()
