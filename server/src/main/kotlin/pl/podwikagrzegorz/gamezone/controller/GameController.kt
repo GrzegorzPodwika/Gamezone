@@ -1,49 +1,27 @@
 package pl.podwikagrzegorz.gamezone.controller
 
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import pl.podwikagrzegorz.gamezone.model.FilterParams
 import pl.podwikagrzegorz.gamezone.model.Game
 import pl.podwikagrzegorz.gamezone.model.GameDTO
 import pl.podwikagrzegorz.gamezone.service.GameService
+import javax.validation.Valid
 
 @RestController
 @CrossOrigin(origins = ["http://localhost:3000"])
-class GameController(val gameService: GameService) {
+class GameController(var gameService: GameService) {
 
     @PostMapping("/addGame")
-    fun addGame(@RequestBody gameDTO: GameDTO): Game {
-        return gameService.addGame(gameDTO)
-    }
+    fun addGame(@Valid @RequestBody gameDTO: GameDTO): ResponseEntity<Game> = gameService.addGame(gameDTO)
 
     @PostMapping("/editGame")
-    fun editGame(@RequestBody game: Game): ResponseEntity<List<Game>> {
-        val updatedGames = gameService.editGame(game)
-        return if (updatedGames == null)
-            ResponseEntity.notFound().build()
-        else
-            ResponseEntity(updatedGames, HttpStatus.OK)
-    }
+    fun editGame(@Valid @RequestBody game: Game): ResponseEntity<List<Game>> = gameService.editGame(game)
 
     @PostMapping("/deleteGame")
-    fun deleteGame(@RequestBody game: Game): ResponseEntity<List<Game>> {
-        val updatedGames = gameService.deleteGame(game)
-        return if (updatedGames == null)
-            ResponseEntity.notFound().build()
-        else
-            ResponseEntity(updatedGames, HttpStatus.OK)
-    }
-
-    @PostMapping("/filterGames")
-    fun filterGames(@RequestBody filterParams: FilterParams): List<Game> {
-        return gameService.filterGames()
-    }
+    fun deleteGame(@Valid @RequestBody game: Game): ResponseEntity<List<Game>> = gameService.deleteGame(game)
 
     @GetMapping("/getAllGames")
-    fun getAllGames(): List<Game> {
-        return gameService.getAllGames()
-    }
+    fun getAllGames(): List<Game> = gameService.getAllGames()
 
     @GetMapping("/getUserGames/{id}")
     fun getUserGames(@PathVariable(value = "id") userId: Long): ResponseEntity<List<Game>> =
@@ -52,12 +30,12 @@ class GameController(val gameService: GameService) {
     @PostMapping("/addUserGame/{id}")
     fun addUserGame(
         @PathVariable(value = "id") userId: Long,
-        @RequestBody game: Game
+        @Valid @RequestBody game: Game
     ): ResponseEntity<List<Game>> = gameService.addUserGame(userId, game)
 
     @PostMapping("/deleteUserGame/{id}")
     fun deleteUserGame(
         @PathVariable(value = "id") userId: Long,
-        @RequestBody game: Game
+        @Valid @RequestBody game: Game
     ): ResponseEntity<List<Game>> = gameService.deleteUserGame(userId, game)
 }

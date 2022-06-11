@@ -14,7 +14,7 @@ class GameService(
     val gameRepository: GameRepository,
     val userRepository: UserRepository
 ) {
-    fun addGame(gameDTO: GameDTO): Game {
+    fun addGame(gameDTO: GameDTO): ResponseEntity<Game> {
         val game = Game(
             title = gameDTO.title,
             type = gameDTO.type,
@@ -22,17 +22,17 @@ class GameService(
             url = gameDTO.url,
             date = gameDTO.date
         )
-        return gameRepository.save(game)
+        return ResponseEntity.ok(gameRepository.save(game))
     }
 
-    fun editGame(game: Game): List<Game>? {
+    fun editGame(game: Game): ResponseEntity<List<Game>> {
         return gameRepository.findByIdOrNull(game.id)?.let {
             gameRepository.save(game)
-            gameRepository.findAll()
-        }
+            ResponseEntity(gameRepository.findAll(), HttpStatus.OK)
+        } ?: ResponseEntity.notFound().build()
     }
 
-    fun deleteGame(game: Game): List<Game>? {
+    fun deleteGame(game: Game): ResponseEntity<List<Game>> {
         return gameRepository.findByIdOrNull(game.id)?.let {
             val users = userRepository.findAllByGamesContains(it)
             users.forEach { user ->
@@ -42,13 +42,9 @@ class GameService(
                 }
             }
             gameRepository.delete(game)
-            gameRepository.findAll()
-        }
-    }
 
-    fun filterGames(): List<Game> {
-        //TODO
-        return emptyList()
+            ResponseEntity(gameRepository.findAll(), HttpStatus.OK)
+        } ?: ResponseEntity.notFound().build()
     }
 
     fun getAllGames(): List<Game> {

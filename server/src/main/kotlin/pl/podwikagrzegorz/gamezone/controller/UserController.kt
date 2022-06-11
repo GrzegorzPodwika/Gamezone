@@ -9,7 +9,7 @@ import pl.podwikagrzegorz.gamezone.service.UserService
 
 @RestController
 @CrossOrigin(origins = ["http://localhost:3000"])
-class UserController(val userService: UserService) {
+class UserController(var userService: UserService) {
 
     @PostMapping("/login")
     fun login(

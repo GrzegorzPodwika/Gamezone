@@ -17,7 +17,6 @@ data class Game(
     @get: NotBlank
     val platform: String = "",
 
-    @get: NotBlank
     val url: String? = null,
 
     @get: NotBlank
