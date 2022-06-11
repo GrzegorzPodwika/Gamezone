@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*
 import pl.podwikagrzegorz.gamezone.model.User
 import pl.podwikagrzegorz.gamezone.model.UserDTO
 import pl.podwikagrzegorz.gamezone.service.UserService
+import javax.validation.Valid
 
 @RestController
 @CrossOrigin(origins = ["http://localhost:3000"])
@@ -15,24 +16,15 @@ class UserController(var userService: UserService) {
     fun login(
         @RequestParam("username") username: String,
         @RequestParam("password") password: String
-    ): ResponseEntity<User> {
-        val user = userService.findUser(username, password)
-
-        return if (user == null)
-            ResponseEntity.notFound().build()
-        else {
-            ResponseEntity.ok(user)
-        }
-    }
+    ): ResponseEntity<User> = userService.findUser(username, password)
 
     @PostMapping("/editUser")
-    fun editUser(@RequestBody user: User): ResponseEntity<User> {
-        val response = userService.save(user)
-        return ResponseEntity(response, HttpStatus.OK)
+    fun editUser(@Valid @RequestBody user: User): ResponseEntity<User> {
+        return userService.update(user)
     }
 
     @PostMapping("/deleteUser")
-    fun deleteUser(@RequestBody user: User): ResponseEntity<List<User>> {
+    fun deleteUser(@Valid @RequestBody user: User): ResponseEntity<List<User>> {
         return userService.deleteUser(user)
     }
 
@@ -42,7 +34,7 @@ class UserController(var userService: UserService) {
     }
 
     @PostMapping("/register")
-    fun register(@RequestBody userDTO: UserDTO): Boolean {
+    fun register(@Valid @RequestBody userDTO: UserDTO): Boolean {
         userService.register(userDTO)
 
         return true

@@ -15,11 +15,16 @@ import javax.persistence.EntityExistsException
 @Service
 class UserService(val userRepository: UserRepository) : UserDetailsService {
 
-    fun findUser(username: String, password: String) = userRepository.findByUsernameAndPassword(username, password)
+    fun findUser(username: String, password: String): ResponseEntity<User> {
+        return userRepository.findByUsernameAndPassword(username, password)?.let {
+            ResponseEntity.ok(it)
+        } ?: ResponseEntity.notFound().build()
+    }
+
 
     fun findUserById(id: Long): User? = userRepository.findByIdOrNull(id)
 
-    fun register(userDTO: UserDTO) {
+    fun register(userDTO: UserDTO): User {
         val user = User(
             username = userDTO.username,
             email = userDTO.email,
@@ -30,15 +35,19 @@ class UserService(val userRepository: UserRepository) : UserDetailsService {
             role = userDTO.role
         )
 
-        userRepository.save(user)
+        return userRepository.save(user)
     }
 
-    fun save(user: User): User = userRepository.save(user)
+    fun update(user: User): ResponseEntity<User> {
+        return findUserById(user.id)?.let {
+            userRepository.save(user)
+            ResponseEntity.ok(user)
+        } ?: ResponseEntity.notFound().build()
+    }
 
     fun getAllUsers(): List<User> = userRepository.findAll()
 
     override fun loadUserByUsername(username: String): UserDetails {
-
         return userRepository.findByUsername(username)
             .map { user ->
                 org.springframework.security.core.userdetails.User(
