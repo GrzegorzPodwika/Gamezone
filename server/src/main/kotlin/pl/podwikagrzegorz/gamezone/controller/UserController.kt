@@ -41,12 +41,6 @@ class UserController(val userService: UserService) {
         return userService.getAllUsers()
     }
 
-    @GetMapping("/logout")
-    fun logout(): Boolean {
-
-        return true
-    }
-
     @PostMapping("/register")
     fun register(@RequestBody userDTO: UserDTO): Boolean {
         userService.register(userDTO)

@@ -27,8 +27,7 @@ class SecurityConfiguration: WebSecurityConfigurerAdapter() {
 
     override fun configure(http: HttpSecurity) {
         http
-            .cors().configurationSource{ CorsConfiguration().applyPermitDefaultValues()}
-            .and()
+            .cors().disable()
             .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS,"/**").permitAll()
                 .antMatchers("/", "/logout", "/register", "/getAllGames", "/login").permitAll()

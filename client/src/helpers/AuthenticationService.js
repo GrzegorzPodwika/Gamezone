@@ -68,20 +68,3 @@ export const getLoggedInUserName = () => {
     if (user === null) return ''
     return user.username
 }
-
-/*
-const setupAxiosInterceptors = (token) => {
-    axios.interceptors.request.use(
-        (config) => {
-            console.log("setupAxiosInterceptors isUserLoggedIn " + isUserLoggedIn());
-
-            if (isUserLoggedIn()) {
-                console.log("setupAxiosInterceptors token " + token);
-                config.headers.Authorization = token;
-            } else {
-                config.headers.Authorization = null;
-            }
-            return config;
-        }
-    )
-}*/
