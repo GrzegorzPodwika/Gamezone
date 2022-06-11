@@ -7,6 +7,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.stereotype.Service
+import pl.podwikagrzegorz.gamezone.exception.UserNotFoundException
 import pl.podwikagrzegorz.gamezone.model.User
 import pl.podwikagrzegorz.gamezone.model.UserDTO
 import pl.podwikagrzegorz.gamezone.repository.UserRepository
@@ -18,11 +19,8 @@ class UserService(val userRepository: UserRepository) : UserDetailsService {
     fun findUser(username: String, password: String): ResponseEntity<User> {
         return userRepository.findByUsernameAndPassword(username, password)?.let {
             ResponseEntity.ok(it)
-        } ?: ResponseEntity.notFound().build()
+        } ?: throw UserNotFoundException()
     }
-
-
-    fun findUserById(id: Long): User? = userRepository.findByIdOrNull(id)
 
     fun register(userDTO: UserDTO): User {
         val user = User(
@@ -39,10 +37,10 @@ class UserService(val userRepository: UserRepository) : UserDetailsService {
     }
 
     fun update(user: User): ResponseEntity<User> {
-        return findUserById(user.id)?.let {
+        return userRepository.findByIdOrNull(user.id)?.let {
             userRepository.save(user)
             ResponseEntity.ok(user)
-        } ?: ResponseEntity.notFound().build()
+        } ?: throw UserNotFoundException()
     }
 
     fun getAllUsers(): List<User> = userRepository.findAll()
@@ -59,10 +57,10 @@ class UserService(val userRepository: UserRepository) : UserDetailsService {
     }
 
     fun deleteUser(user: User): ResponseEntity<List<User>> {
-        return findUserById(user.id)?.let {
+        return userRepository.findByIdOrNull(user.id)?.let {
             remove(it)
             ResponseEntity(getAllUsers(), HttpStatus.OK)
-        } ?: ResponseEntity.notFound().build()
+        } ?: throw UserNotFoundException()
     }
 
     private fun remove(user: User) {

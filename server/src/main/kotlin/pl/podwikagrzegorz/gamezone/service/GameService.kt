@@ -4,6 +4,9 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
+import pl.podwikagrzegorz.gamezone.exception.GameAlreadyAssignedToUserException
+import pl.podwikagrzegorz.gamezone.exception.GameNotFoundException
+import pl.podwikagrzegorz.gamezone.exception.UserNotFoundException
 import pl.podwikagrzegorz.gamezone.model.Game
 import pl.podwikagrzegorz.gamezone.model.GameDTO
 import pl.podwikagrzegorz.gamezone.repository.GameRepository
@@ -29,7 +32,7 @@ class GameService(
         return gameRepository.findByIdOrNull(game.id)?.let {
             gameRepository.save(game)
             ResponseEntity(gameRepository.findAll(), HttpStatus.OK)
-        } ?: ResponseEntity.notFound().build()
+        } ?: throw GameNotFoundException()
     }
 
     fun deleteGame(game: Game): ResponseEntity<List<Game>> {
@@ -44,7 +47,7 @@ class GameService(
             gameRepository.delete(game)
 
             ResponseEntity(gameRepository.findAll(), HttpStatus.OK)
-        } ?: ResponseEntity.notFound().build()
+        } ?: throw GameNotFoundException()
     }
 
     fun getAllGames(): List<Game> {
@@ -54,7 +57,7 @@ class GameService(
     fun getUserGames(userId: Long): ResponseEntity<List<Game>> {
         return userRepository.findByIdOrNull(userId)?.games?.let {
             ResponseEntity.ok(it.toList())
-        } ?: ResponseEntity.notFound().build()
+        } ?: throw UserNotFoundException()
     }
 
     fun addUserGame(userId: Long, game: Game): ResponseEntity<List<Game>> {
@@ -64,8 +67,8 @@ class GameService(
 
                 ResponseEntity.ok(user.games.toList())
             } else
-                ResponseEntity(HttpStatus.CONFLICT)
-        } ?: ResponseEntity.notFound().build()
+                throw GameAlreadyAssignedToUserException()
+        } ?: throw UserNotFoundException()
     }
 
     fun deleteUserGame(userId: Long, game: Game): ResponseEntity<List<Game>> {
@@ -76,7 +79,7 @@ class GameService(
 
                 ResponseEntity.ok(user.games.toList())
             } else
-                ResponseEntity.notFound().build()
-        } ?: ResponseEntity.notFound().build()
+                throw GameNotFoundException()
+        } ?: throw UserNotFoundException()
     }
 }
