@@ -4,6 +4,8 @@ import "antd/dist/antd.css";
 import { DatePicker } from "antd";
 import {TYPES} from "../../helpers/GameType";
 import {PLATFORMS} from "../../helpers/Platform";
+import useForceUpdate from "antd/lib/_util/hooks/useForceUpdate";
+import moment from "moment";
 
 function GameFilter(props) {
 
@@ -55,7 +57,13 @@ function GameFilter(props) {
   }
 
   const handleClearClick = () => {
-    props.handleClear();
+    setGameData({
+          title: "",
+          type: "",
+          platform: "",
+          dateFrom: "",
+          dateTo: "",
+        });
   }
 
   return (
@@ -75,7 +83,7 @@ function GameFilter(props) {
       <Form>
         <Form.Field>
           <label style={{fontSize: "14px"}}>Tytuł</label>
-          <input placeholder="Tytuł" name="title" onChange={handleTitleChange} />
+          <input placeholder="Tytuł" name="title" onChange={handleTitleChange} value={gameData.title} />
         </Form.Field>
         <Form.Field>
           <label style={{fontSize: "14px"}}>Gatunek</label>
@@ -86,6 +94,7 @@ function GameFilter(props) {
               selection
               options={TYPES}
               onChange={handleGameTypeChange}
+              value={gameData.type}
           />
         </Form.Field>
         <Form.Field>
@@ -97,6 +106,7 @@ function GameFilter(props) {
               selection
               options={PLATFORMS}
               onChange={handlePlatformChange}
+              value={gameData.platform}
           />
         </Form.Field>
 
@@ -105,6 +115,7 @@ function GameFilter(props) {
           <DatePicker
             onChange={handleChangeDateFrom}
             style={{ width: "100%" }}
+            value={gameData.dateFrom.length === 0 ? null : moment(gameData.dateFrom, "YYYY-MM-DD") }
             placeholder="Data wydania od"
           />
         </Form.Field>
@@ -113,6 +124,7 @@ function GameFilter(props) {
           <DatePicker
             onChange={handleChangeDateTo}
             style={{ width: "100%" }}
+            value={gameData.dateTo.length === 0 ? null : moment(gameData.dateTo, "YYYY-MM-DD") }
             placeholder="Data wydania do"
           />
         </Form.Field>

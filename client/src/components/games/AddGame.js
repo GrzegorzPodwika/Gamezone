@@ -6,6 +6,7 @@ import {DatePicker} from "antd";
 import {TYPES} from "../../helpers/GameType";
 import {PLATFORMS} from "../../helpers/Platform";
 import {AxiosClient} from "../../helpers/AuthenticationService";
+import moment from "moment";
 
 function AddGame() {
 
@@ -97,7 +98,6 @@ function AddGame() {
             url: "",
             date: ""
         });
-
     }
 
     return (
@@ -107,11 +107,12 @@ function AddGame() {
                 <Form>
                     <Form.Field>
                         <label>Tytuł</label>
-                        <input placeholder="Tytuł" name="title" onChange={handleChange}/>
+                        <input placeholder="Tytuł" name="title" onChange={handleChange} value={gameData.title}/>
                     </Form.Field>
                     <Form.Field>
                         <label>Gatunek</label>
                         <Dropdown
+                            value={gameData.type}
                             placeholder="Gatunek"
                             fluid
                             selection
@@ -122,6 +123,7 @@ function AddGame() {
                     <Form.Field>
                         <label>Platforma</label>
                         <Dropdown
+                            value={gameData.platform}
                             placeholder="Platforma"
                             fluid
                             selection
@@ -135,6 +137,7 @@ function AddGame() {
                             placeholder="Url Zdjęcia"
                             name="url"
                             onChange={handleChange}
+                            value={gameData.url}
                         />
                     </Form.Field>
                     <Form.Field>
@@ -143,6 +146,7 @@ function AddGame() {
                             onChange={handleChangeDate}
                             style={{width: "100%"}}
                             placeholder="Data wydania"
+                            value={gameData.dateFrom.length === 0 ? null : moment(gameData.date, "YYYY-MM-DD") }
                         />
                     </Form.Field>
                     <Button
@@ -150,8 +154,7 @@ function AddGame() {
                         color="green"
                         onClick={handleAddGame}
                         style={{width: "100%"}}
-                    >
-                        Potwierdź dodanie
+                    >Potwierdź dodanie
                     </Button>
                 </Form>
             </div>

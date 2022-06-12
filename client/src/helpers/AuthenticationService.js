@@ -32,6 +32,11 @@ export const AxiosClient = () => {
     return instance;
 }
 
+export const isUserLoggedIn = () => {
+    let user = sessionStorage.getItem(USER_SESSION_ATTRIBUTE)
+    return user !== null;
+}
+
 export const ExecuteBasicAuthenticationService = (formData) => {
     return axios.post(`/login`, formData, {
         headers: {
@@ -40,31 +45,20 @@ export const ExecuteBasicAuthenticationService = (formData) => {
     })
 }
 
-export const CreateBasicAuthToken = (username, password) => {
-    return 'Basic ' + window.btoa(username + ":" + password);
-}
-
 export const UpdateUser = (userObject) => {
-    console.log("registerSuccessfulLogin user: " + userObject + " username " + userObject.username);
     const convertedUser = JSON.stringify(userObject);
 
     sessionStorage.setItem(USER_SESSION_ATTRIBUTE, convertedUser);
     sessionStorage.setItem(TOKEN_ATTRIBUTE, CreateBasicAuthToken(userObject.username, userObject.password));
 }
 
+const CreateBasicAuthToken = (username, password) => {
+    return 'Basic ' + window.btoa(username + ":" + password);
+}
+
 export const Logout = () => {
     sessionStorage.removeItem(USER_SESSION_ATTRIBUTE);
     sessionStorage.removeItem(TOKEN_ATTRIBUTE);
-
 }
 
-export const isUserLoggedIn = () => {
-    let user = sessionStorage.getItem(USER_SESSION_ATTRIBUTE)
-    return user !== null;
-}
 
-export const getLoggedInUserName = () => {
-    let user = sessionStorage.getItem(USER_SESSION_ATTRIBUTE)
-    if (user === null) return ''
-    return user.username
-}

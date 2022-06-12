@@ -40,7 +40,7 @@ function Navigation() {
                 <Nav.Link href="/mygames" style={{ fontSize: "18px"}}>Moje gry</Nav.Link>
                 {user.role === Role.Admin ? (
                   <>
-                    <Nav.Link href="/addgame" style={{ fontSize: "18px"}}>Dodaj gre</Nav.Link>
+                    <Nav.Link href="/addgame" style={{ fontSize: "18px"}}>Dodaj grę</Nav.Link>
                     <Nav.Link href="/users" style={{ fontSize: "18px"}}>Użytkownicy</Nav.Link>
                   </>
                 ) : (
