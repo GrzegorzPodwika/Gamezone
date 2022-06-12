@@ -146,7 +146,7 @@ function AddGame() {
                             onChange={handleChangeDate}
                             style={{width: "100%"}}
                             placeholder="Data wydania"
-                            value={gameData.dateFrom.length === 0 ? null : moment(gameData.date, "YYYY-MM-DD") }
+                            value={gameData.date.length === 0 ? null : moment(gameData.date, "YYYY-MM-DD") }
                         />
                     </Form.Field>
                     <Button

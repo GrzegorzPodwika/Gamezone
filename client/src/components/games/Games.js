@@ -40,7 +40,6 @@ class Games extends React.Component {
     }
 
     handleFilterClick = (filterParams) => {
-        console.log(filterParams);
         const filteredGames = this.state.originalGames.filter(game => {
             let filterValue = true;
 
