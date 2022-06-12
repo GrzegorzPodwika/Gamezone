@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import {Card, Button, Icon, Modal, Header, Form, Image, Dropdown} from "semantic-ui-react";
+import {Card, Button, Icon, Modal, Header, Form, Image, Dropdown, Confirm} from "semantic-ui-react";
 import { DatePicker } from "antd";
 import { UserContext } from "../../helpers/UserContext";
 import {createNotification, NOTIFICATION} from "../../helpers/Notification";
@@ -13,6 +13,8 @@ function GameCard(props) {
   const { user } = useContext(UserContext);
 
   const [openModal, setOpenModal] = useState(false);
+  const [open, setOpenDialog] = useState(false);
+
   const [gameData, setGameData] = useState({
     id: props.game.id,
     title: props.game.title,
@@ -107,6 +109,10 @@ function GameCard(props) {
         }
       });
   };
+
+  const showDeletionDialog = () => {
+    setOpenDialog(true)
+  }
 
   return (
     <Card>
@@ -208,9 +214,23 @@ function GameCard(props) {
                 </Modal.Actions>
               </Modal>
 
-              <Button color="red" onClick={handleDeleteGame}>
-                Usuń
-              </Button>
+              <Button color="red" onClick={showDeletionDialog}>Usuń</Button>
+              <Confirm
+                  style={{
+                    height: "auto",
+                    width: "auto",
+                    left: "auto",
+                    bottom: "auto",
+                    right: "auto",
+                    top: "auto",
+                    fontSize: "30px",
+                    padding: "10px",
+                  }}
+                  content="Czy jesteś pewien?"
+                  open={open}
+                  onConfirm={handleDeleteGame}
+                  onCancel={()=> setOpenDialog(false)}
+              />
             </>
           ) : (
             <></>

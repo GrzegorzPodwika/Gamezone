@@ -25,7 +25,6 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("com.ninja-squad:springmockk:3.0.1")
-	implementation("com.squareup.okhttp3:okhttp:4.9.3")
 	implementation("io.projectreactor:reactor-core:3.4.18")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")

@@ -143,6 +143,8 @@ function UserItem(props) {
                         bottom: "auto",
                         right: "auto",
                         top: "auto",
+                        fontSize: "30px",
+                        padding: "10px",
                     }}
                     content="Czy jesteś pewien?"
                     open={open}
