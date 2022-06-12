@@ -76,11 +76,15 @@ class Games extends React.Component {
         this.setState({games: updatedGames});
     }
 
+    handleClearClick = () => {
+        this.setState({games: this.state.originalGames});
+    }
+
     render() {
         return (
             <div className="container-games">
                 <div className="filter-wrap-games">
-                    <GameFilter handleFilter={this.handleFilterClick}/>
+                    <GameFilter handleFilter={this.handleFilterClick} handleClearClick={this.handleClearClick}/>
                 </div>
                 <div className="items-wrap-games">
                     <div>

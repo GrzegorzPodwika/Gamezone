@@ -64,6 +64,7 @@ function GameFilter(props) {
           dateFrom: "",
           dateTo: "",
         });
+    props.handleClearClick();
   }
 
   return (

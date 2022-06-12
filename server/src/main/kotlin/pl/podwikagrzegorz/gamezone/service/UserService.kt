@@ -43,17 +43,25 @@ class UserService(val userRepository: UserRepository) : UserDetailsService {
 
     fun update(user: User): ResponseEntity<User> {
         return userRepository.findByIdOrNull(user.id)?.let {
-            userRepository.save(user)
-            ResponseEntity.ok(user)
+            val copy = it.copy(
+                    username = user.username,
+                    password = user.password,
+                    email = user.email,
+                    firstName = user.firstName,
+                    lastName = user.lastName,
+                    phone = user.phone,
+                    role = user.role
+            )
+            ResponseEntity.ok(userRepository.save(copy))
         } ?: throw UserNotFoundException()
     }
 
     fun deleteUser(user: User): ResponseEntity<List<User>> {
         return userRepository.findByIdOrNull(user.id)?.let {
-            user.games.clear()
-            userRepository.save(user)
+            it.games.clear()
+            userRepository.save(it)
 
-            userRepository.delete(user)
+            userRepository.delete(it)
 
             ResponseEntity(getAllUsers(), HttpStatus.OK)
         } ?: throw UserNotFoundException()

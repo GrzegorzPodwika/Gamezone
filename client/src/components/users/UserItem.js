@@ -10,7 +10,6 @@ function UserItem(props) {
     const [userData, setUserData] = useState(props.user);
     const [open, setOpenDialog] = useState(false)
 
-
     const handleChange = (e) => {
         setUserData({
             ...userData,
@@ -116,7 +115,10 @@ function UserItem(props) {
                         <UserDetails user={userData} handleChange={handleChange} handleChangeRole={handleChangeRole}/>
                     </Modal.Content>
                     <Modal.Actions>
-                        <Button color="red" onClick={() => setOpenModal(false)}>
+                        <Button color="red" onClick={() => {
+                            setUserData(props.user);
+                            setOpenModal(false);
+                        }}>
                             <Icon name="remove"/> Odrzuć zmiany
                         </Button>
                         <Button color="green" onClick={editUser}>

@@ -4,8 +4,8 @@ import {Role} from "../../helpers/Role";
 
 function UserDetails(props) {
     const optionsRoleUser = [
-        {key: Role.Admin, text: "Admin", value: true},
-        {key: Role.User, text: "Użytkownik", value: false},
+        {key: Role.Admin, text: "Admin", value: "ADMIN"},
+        {key: Role.User, text: "Użytkownik", value: "USER"},
     ];
 
     return (
