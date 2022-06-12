@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.stereotype.Service
 import pl.podwikagrzegorz.gamezone.exception.UserNotFoundException
+import pl.podwikagrzegorz.gamezone.exception.UsernameAlreadyTakenException
 import pl.podwikagrzegorz.gamezone.model.User
 import pl.podwikagrzegorz.gamezone.model.UserDTO
 import pl.podwikagrzegorz.gamezone.repository.UserRepository
@@ -32,14 +33,29 @@ class UserService(val userRepository: UserRepository) : UserDetailsService {
             password = userDTO.password,
             role = userDTO.role
         )
+        val searchUser = userRepository.findByUsername(userDTO.username)
 
-        return userRepository.save(user)
+        if (searchUser.isEmpty)
+            return userRepository.save(user)
+        else
+            throw UsernameAlreadyTakenException()
     }
 
     fun update(user: User): ResponseEntity<User> {
         return userRepository.findByIdOrNull(user.id)?.let {
             userRepository.save(user)
             ResponseEntity.ok(user)
+        } ?: throw UserNotFoundException()
+    }
+
+    fun deleteUser(user: User): ResponseEntity<List<User>> {
+        return userRepository.findByIdOrNull(user.id)?.let {
+            user.games.clear()
+            userRepository.save(user)
+
+            userRepository.delete(user)
+
+            ResponseEntity(getAllUsers(), HttpStatus.OK)
         } ?: throw UserNotFoundException()
     }
 
@@ -54,19 +70,5 @@ class UserService(val userRepository: UserRepository) : UserDetailsService {
                     listOf(SimpleGrantedAuthority(user.role))
                 )
             }.orElseThrow { EntityExistsException("User $username doesn't exist in database.") }
-    }
-
-    fun deleteUser(user: User): ResponseEntity<List<User>> {
-        return userRepository.findByIdOrNull(user.id)?.let {
-            remove(it)
-            ResponseEntity(getAllUsers(), HttpStatus.OK)
-        } ?: throw UserNotFoundException()
-    }
-
-    private fun remove(user: User) {
-        user.games.clear()
-        userRepository.save(user)
-
-        userRepository.delete(user)
     }
 }

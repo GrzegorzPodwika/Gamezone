@@ -9,6 +9,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import pl.podwikagrzegorz.gamezone.exception.GameAlreadyAssignedToUserException
 import pl.podwikagrzegorz.gamezone.exception.GameNotFoundException
 import pl.podwikagrzegorz.gamezone.exception.UserNotFoundException
+import pl.podwikagrzegorz.gamezone.exception.UsernameAlreadyTakenException
 import java.time.LocalDateTime
 import java.util.*
 
@@ -43,6 +44,18 @@ class GlobalExceptionHandler: ResponseEntityExceptionHandler() {
     @ExceptionHandler(GameAlreadyAssignedToUserException::class)
     fun handleGameAlreadyAssignedToUserException(
         ex: GameAlreadyAssignedToUserException,
+        request: WebRequest
+    ) : ResponseEntity<Any> {
+        val body = LinkedHashMap<String, Any>()
+        body["timestamp"] = LocalDateTime.now()
+        body["message"] = ex.message
+
+        return ResponseEntity(body, HttpStatus.CONFLICT)
+    }
+
+    @ExceptionHandler(UsernameAlreadyTakenException::class)
+    fun handleUsernameAlreadyTakenException(
+        ex: UsernameAlreadyTakenException,
         request: WebRequest
     ) : ResponseEntity<Any> {
         val body = LinkedHashMap<String, Any>()
