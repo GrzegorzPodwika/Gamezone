@@ -11,7 +11,8 @@ class Games extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            games: []
+            games: [],
+            originalGames: []
         }
     }
 
@@ -24,6 +25,7 @@ class Games extends React.Component {
             .get("getAllGames")
             .then((res) => {
                 if (res.status !== undefined && res.status === 200) {
+                    this.setState({originalGames: res.data});
                     this.setState({games: res.data});
                 }
             })
@@ -35,23 +37,50 @@ class Games extends React.Component {
             });
     }
 
-    handleFilteredGames = (filteredGames) => {
+    handleFilterClick = (filterParams) => {
+        console.log(filterParams);
+
+        const filteredGames = this.state.originalGames.filter(game => {
+            let filterValue = true;
+
+            if (filterParams.title !== undefined && filterParams.title.length !== 0) {
+                filterValue = filterValue && game.title.toLowerCase().includes(filterParams.title.toLowerCase())
+            }
+            if(filterParams.type !== undefined && filterParams.type.length !== 0) {
+                filterValue = filterValue && game.type.toLowerCase().includes(filterParams.type.toLowerCase());
+            }
+            if(filterParams.platform !== undefined && filterParams.platform.length !== 0) {
+                filterValue = filterValue && game.platform.toLowerCase().includes(filterParams.platform.toLowerCase());
+            }
+            if(filterParams.dateFrom !== undefined && filterParams.dateFrom.length !== 0) {
+                filterValue = filterValue && Date.parse(game.date) >= Date.parse(filterParams.dateFrom)
+            }
+            if(filterParams.dateTo !== undefined && filterParams.dateTo.length !== 0) {
+                filterValue = filterValue && Date.parse(game.date) <= Date.parse(filterParams.dateTo)
+            }
+
+            return filterValue;
+        });
+
         this.setState({games: filteredGames});
     }
 
+
     handleDeleteGame = (updatedGames) => {
+        this.setState({originalGames: updatedGames});
         this.setState({games: updatedGames});
     }
 
-    handleEditGame = (newGames) => {
-        this.setState({games: newGames});
+    handleEditGame = (updatedGames) => {
+        this.setState({originalGames: updatedGames});
+        this.setState({games: updatedGames});
     }
 
     render() {
         return (
-            <div className="contener-games">
+            <div className="container-games">
                 <div className="filter-wrap-games">
-                    <GameFilter handleFilteredGames={this.handleFilteredGames}/>
+                    <GameFilter handleFilter={this.handleFilterClick}/>
                 </div>
                 <div className="items-wrap-games">
                     <div>

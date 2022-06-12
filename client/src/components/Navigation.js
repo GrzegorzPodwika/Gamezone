@@ -15,14 +15,13 @@ function Navigation() {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link href="/">Gry</Nav.Link>
             {user ? (
               <>
-                <Nav.Link href="/mygames">Moje gry</Nav.Link>
+                <Nav.Link href="/mygames" style={{ fontSize: "18px"}}>Moje gry</Nav.Link>
                 {user.role === Role.Admin ? (
                   <>
-                    <Nav.Link href="/addgame">Dodaj gre</Nav.Link>
-                    <Nav.Link href="/users">Użytkownicy</Nav.Link>
+                    <Nav.Link href="/addgame" style={{ fontSize: "18px"}}>Dodaj gre</Nav.Link>
+                    <Nav.Link href="/users" style={{ fontSize: "18px"}}>Użytkownicy</Nav.Link>
                   </>
                 ) : (
                   <></>
@@ -35,9 +34,10 @@ function Navigation() {
           <Nav>
             {user ? (
               <>
-                <Nav.Link href="/myprofile">Mój profil</Nav.Link>
+                <Nav.Link href="/myprofile" style={{ fontSize: "18px"}}>Mój profil</Nav.Link>
                 <Nav.Link
                   href="/login"
+                  style={{ fontSize: "18px"}}
                   onClick={() => {
                     AxiosClient()
                       .get("logout")
@@ -63,8 +63,8 @@ function Navigation() {
               </>
             ) : (
               <>
-                <Nav.Link href="/login">Logowanie</Nav.Link>
-                <Nav.Link href="/register">Rejestracja</Nav.Link>
+                <Nav.Link href="/login" style={{ fontSize: "18px"}}>Logowanie</Nav.Link>
+                <Nav.Link href="/register" style={{ fontSize: "18px"}}>Rejestracja</Nav.Link>
               </>
             )}
           </Nav>
