@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Card, Button, Icon, Image } from "semantic-ui-react";
 import { UserContext } from "../../helpers/UserContext";
-import { createNotification } from "../../helpers/Notification";
+import {createNotification, NOTIFICATION} from "../../helpers/Notification";
 import {AxiosClient} from "../../helpers/AuthenticationService";
 
 function UserGameCard(props) {
@@ -12,18 +12,17 @@ function UserGameCard(props) {
       .post(`deleteUserGame/${user.id}`, props.game)
       .then((res) => {
         if (res.status !== undefined && res.status === 200) {
-          createNotification("success", "Pomyślnie usunięto grę");
+          createNotification("Pomyślnie usunięto grę", NOTIFICATION.SUCCESS);
           props.handleDeleteGame(res.data);
         }
       })
       .catch((err) => {
-        if (err.response !== undefined)
-            if (err.response.status === 404)
-                createNotification("error", "Użytkownik albo gra nie została znaleziona!");
-            else if(err.response.status === 409)
-                createNotification("error", "Gra nie została usunięta!");
-            else
-                createNotification("error", err.response.status);
+          if (err.response !== undefined) {
+              if(err.response.data.message !== undefined)
+                  createNotification(err.response.data.message);
+              else
+                  createNotification("Nie udało się usunąć gry " + err.response.status);
+          }
       });
   };
 

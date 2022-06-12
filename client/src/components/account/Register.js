@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button, Form } from "semantic-ui-react";
-import { createNotification } from "../../helpers/Notification";
+import {createNotification, NOTIFICATION} from "../../helpers/Notification";
 import { Redirect } from "react-router-dom";
 import axios from "axios";
 import {Role} from "../../helpers/Role";
@@ -26,22 +26,23 @@ function Register() {
 
   const validateRegisterData = () => {
     if (registerData.username.length <= 0) {
-      createNotification("error", "Login jest wymagany");
+      createNotification("Login jest wymagany");
+
       return false;
     } else if (registerData.email.length <= 0) {
-      createNotification("error", "Email jest wymagany");
+      createNotification("Email jest wymagany");
       return false;
     } else if (registerData.firstName.length <= 0) {
-      createNotification("error", "Imię jest wymagane");
+      createNotification("Imię jest wymagane");
       return false;
     } else if (registerData.lastName.length <= 0) {
-      createNotification("error", "Nazwisko jest wymagane");
+      createNotification("Nazwisko jest wymagane");
       return false;
     } else if (registerData.phone.length <= 0) {
-      createNotification("error", "Telefon jest wymagany");
+      createNotification("Telefon jest wymagany");
       return false;
     } else if (registerData.password.length <= 0) {
-      createNotification("error", "Hasło jest wymagane");
+      createNotification( "Hasło jest wymagane");
       return false;
     }
     return true;
@@ -55,16 +56,17 @@ function Register() {
             setResponse(true)
 
             if (res.status !== undefined && res.status === 200) {
-              createNotification(
-                  "success",
-                  "Rejestracja przebiegła pomyślniue"
-              );
+              createNotification("Rejestracja przebiegła pomyślnie", NOTIFICATION.SUCCESS);
             }
           })
           .catch((err) => {
             console.log(err);
-            if (err.response !== undefined)
-              createNotification("error", "Rejestracja sie nie powiodla" + err.response.status);
+            if (err.response !== undefined) {
+              if(err.response.data.message !== undefined)
+                createNotification(err.response.data.message);
+              else
+                createNotification("Rejestracja sie nie powiodła " + err.response.status);
+            }
           });
     }
   };

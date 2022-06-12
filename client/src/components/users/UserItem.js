@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import {Table, Modal, Button, Header, Icon, Confirm} from "semantic-ui-react";
 import {AiFillEdit, AiFillDelete} from "react-icons/ai";
 import UserDetails from "./UserDetails";
-import {createNotification} from "../../helpers/Notification";
+import {createNotification, NOTIFICATION} from "../../helpers/Notification";
 import {AxiosClient} from "../../helpers/AuthenticationService";
 
 function UserItem(props) {
@@ -34,12 +34,16 @@ function UserItem(props) {
             .post("deleteUser", props.user).then((res) => {
                 if (res.status !== undefined && res.status === 200) {
                     props.handleDeleteUser(res.data);
-                    createNotification("info", "Usunięto użytkowika");
+                    createNotification("Usunięto użytkowika", NOTIFICATION.INFO);
                 }
             })
             .catch((err) => {
-                if (err.response !== undefined)
-                    createNotification("error", err.response.status);
+                if (err.response !== undefined) {
+                    if(err.response.data.message !== undefined)
+                        createNotification(err.response.data.message);
+                    else
+                        createNotification("Nie udało się usunąć użytkownika " + err.response.status);
+                }
             });
     };
 
@@ -59,13 +63,17 @@ function UserItem(props) {
             .then((res) => {
                 if (res.status !== undefined && res.status === 200) {
                     props.handleEditUser(res.data);
-                    createNotification("info", "Pomyślnie edytowano użytkownika");
+                    createNotification("Pomyślnie edytowano użytkownika", NOTIFICATION.INFO);
                     setOpenModal(false);
                 }
             })
             .catch((err) => {
-                if (err.response !== undefined)
-                    createNotification("error", err.response.status);
+                if (err.response !== undefined) {
+                    if(err.response.data.message !== undefined)
+                        createNotification(err.response.data.message);
+                    else
+                        createNotification("Nie udało się edytować użytkownika " + err.response.status);
+                }
             });
 
     }

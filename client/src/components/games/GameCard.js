@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import {Card, Button, Icon, Modal, Header, Form, Image, Dropdown} from "semantic-ui-react";
 import { DatePicker } from "antd";
 import { UserContext } from "../../helpers/UserContext";
-import { createNotification } from "../../helpers/Notification";
+import {createNotification, NOTIFICATION} from "../../helpers/Notification";
 import moment from "moment";
 import {Role} from "../../helpers/Role";
 import {AxiosClient} from "../../helpers/AuthenticationService";
@@ -56,13 +56,17 @@ function GameCard(props) {
       .then((res) => {
         if (res.status !== undefined && res.status === 200) {
           props.handleEditGame(res.data);
-          createNotification("info", "Pomyślnie edytowano grę");
+          createNotification("Pomyślnie edytowano grę", NOTIFICATION.INFO);
           setOpenModal(false);
         }
       })
       .catch((err) => {
-        if (err.response !== undefined)
-          createNotification("error", err.response.status);
+        if (err.response !== undefined) {
+          if(err.response.data.message !== undefined)
+            createNotification(err.response.data.message);
+          else
+            createNotification("Nie udało się edytować gry " + err.response.status);
+        }
       });
   };
 
@@ -71,17 +75,16 @@ function GameCard(props) {
       .post(`addUserGame/${user.id}`, props.game)
       .then((res) => {
         if (res.status !== undefined && res.status === 200) {
-          createNotification("success", "Pomyślnie dodano grę");
+          createNotification("Pomyślnie dodano grę", NOTIFICATION.SUCCESS);
         }
       })
       .catch((err) => {
-        if (err.response !== undefined)
-          if (err.response.status === 404)
-            createNotification("error", "Użytkownik albo gra nie została znaleziona!");
-          else if(err.response.status === 409)
-            createNotification("error", "Uzytkownik już posiada wybraną grę!");
-          else
-            createNotification("error", err.response.status);
+        if (err.response !== undefined) {
+          if(err.response.data.message !== undefined)
+            createNotification(err.response.data.message);
+           else
+            createNotification("Nie udało się dodać gry " + err.response.status);
+        }
       });
   };
 
@@ -90,18 +93,18 @@ function GameCard(props) {
       .post('deleteGame', props.game)
       .then((res) => {
         if (res.status !== undefined && res.status === 200) {
-          createNotification("success", "Pomyślnie usunięto grę");
+          createNotification("Pomyślnie usunięto grę", NOTIFICATION.SUCCESS);
+
           props.handleDeleteGame(res.data);
         }
       })
       .catch((err) => {
-        if (err.response !== undefined)
-          if (err.response.status === 404)
-            createNotification("error", "Użytkownik albo gra nie została znaleziona!");
-          else if(err.response.status === 409)
-            createNotification("error", "Gra nie została usunięta!");
+        if (err.response !== undefined) {
+          if(err.response.data.message !== undefined)
+            createNotification(err.response.data.message);
           else
-            createNotification("error", err.response.status);
+            createNotification("Nie udało się usunąć gry " + err.response.status);
+        }
       });
   };
 

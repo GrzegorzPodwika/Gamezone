@@ -22,8 +22,12 @@ function UserGames() {
                 }
             })
             .catch((err) => {
-                if (err.response !== undefined)
-                    createNotification("error", err.response.status);
+                if (err.response !== undefined) {
+                    if(err.response.data.message !== undefined)
+                        createNotification(err.response.data.message);
+                    else
+                        createNotification("Nie udało się pobrać gier użytkownika " + err.response.status);
+                }
             });
     }, []);
 

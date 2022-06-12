@@ -36,10 +36,12 @@ class Users extends React.Component {
                 }
             })
             .catch((err) => {
-                console.log(err)
-
-                if (err.response !== undefined)
-                    createNotification("error", err.response.status);
+                if (err.response !== undefined) {
+                    if(err.response.data.message !== undefined)
+                        createNotification(err.response.data.message);
+                    else
+                        createNotification("Nie udało się pobrać listy użytkowników " + err.response.status);
+                }
             });
     }
 

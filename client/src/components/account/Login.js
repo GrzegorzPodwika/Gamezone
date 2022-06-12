@@ -1,6 +1,6 @@
 import React, {useState, useContext} from "react";
 import {Button, Form} from "semantic-ui-react";
-import {createNotification} from "../../helpers/Notification";
+import {createNotification, NOTIFICATION} from "../../helpers/Notification";
 import {UserContext} from "../../helpers/UserContext";
 import {Redirect} from "react-router-dom";
 import {ExecuteBasicAuthenticationService, UpdateUser} from "../../helpers/AuthenticationService";
@@ -27,25 +27,19 @@ function Login() {
 
         ExecuteBasicAuthenticationService(formData)
         .then(res => {
-                console.log("login res status: " + res.status + "data: " + res.data)
-
                 if (res.status !== undefined && res.status === 200) {
-                    console.log("login status OK ")
-
+                    createNotification("Pomyślnie zalogowano", NOTIFICATION.INFO)
                     UpdateUser(res.data)
                     setUser(res.data)
                 }
             })
             .catch(err => {
-                console.log("login error " + err)
                 if (err.response !== undefined) {
-                    if (err.response.status === 404)
-                        createNotification("error", "Użytkownik nie znaleziony!")
+                    if(err.response.data.message !== undefined)
+                        createNotification(err.response.data.message);
                     else
-                        createNotification("error", "status: " + err.response.status);
+                        createNotification("Nie udało się zalogować " + err.response.status);
                 }
-                else
-                    createNotification("error", "Błąd logowania")
             })
     }
 
@@ -53,7 +47,7 @@ function Login() {
         if (loginData.username.length > 0 && loginData.password.length > 0) {
             sendLoginDataToAPI(loginData);
         } else {
-            createNotification("error", "Login i hasło są wymagane");
+            createNotification("Login i hasło są wymagane");
         }
     };
 

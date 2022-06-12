@@ -1,12 +1,32 @@
 import React, { useContext } from "react";
 import { Navbar, Container, Nav } from "react-bootstrap";
 import { UserContext } from "../helpers/UserContext";
-import { createNotification } from "../helpers/Notification";
+import {createNotification, NOTIFICATION} from "../helpers/Notification";
 import {Role} from "../helpers/Role";
 import {AxiosClient, Logout} from "../helpers/AuthenticationService";
 
 function Navigation() {
   const { user, setUser } = useContext(UserContext);
+
+  const logout = () => {
+    AxiosClient()
+        .get("logout")
+        .then((res) => {
+            console.log(res);
+
+            if (res.status !== undefined && res.status === 200) {
+                createNotification("Zostałeś pomyślnie wylogowany", NOTIFICATION.SUCCESS);
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+            if (err.response !== undefined)
+                createNotification("Nie udało się wylogować " + err.response.status);
+        });
+
+      Logout();
+      setUser(null);
+  }
 
   return (
     <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
@@ -35,31 +55,7 @@ function Navigation() {
             {user ? (
               <>
                 <Nav.Link href="/myprofile" style={{ fontSize: "18px"}}>Mój profil</Nav.Link>
-                <Nav.Link
-                  href="/login"
-                  style={{ fontSize: "18px"}}
-                  onClick={() => {
-                    AxiosClient()
-                      .get("logout")
-                      .then((res) => {
-                        if (res.status !== undefined && res.status === 200) {
-                          createNotification(
-                            "success",
-                            "Pomyślnie zostałeś wylogowany"
-                          );
-                        }
-                      })
-                      .catch((err) => {
-                        if (err.response !== undefined)
-                          createNotification("error", err.response.status);
-                      });
-
-                    Logout()
-                    setUser(null)
-                  }}
-                >
-                  Wyloguj
-                </Nav.Link>
+                <Nav.Link href="/login" style={{ fontSize: "18px"}} onClick={logout}>Wyloguj</Nav.Link>
               </>
             ) : (
               <>

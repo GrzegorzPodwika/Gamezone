@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { UserContext } from "../../helpers/UserContext";
 import { Form, Icon, Button } from "semantic-ui-react";
-import { createNotification } from "../../helpers/Notification";
+import {createNotification, NOTIFICATION} from "../../helpers/Notification";
 import {Role} from "../../helpers/Role";
 import {AxiosClient, UpdateUser} from "../../helpers/AuthenticationService";
 
@@ -30,17 +30,21 @@ function UserProfile() {
         .post("editUser", updatedUser)
         .then((res) => {
           if (res.status !== undefined && res.status === 200) {
-            createNotification("success", "Pomyślnie zmieniono hasło");
+            createNotification("Pomyślnie zmieniono hasło", NOTIFICATION.SUCCESS);
             UpdateUser(updatedUser);
             setUser(res.data)
           }
         })
         .catch((err) => {
-          if (err.response !== undefined)
-            createNotification("error", err.response.status);
+          if (err.response !== undefined) {
+            if(err.response.data.message !== undefined)
+              createNotification(err.response.data.message);
+            else
+              createNotification("Nie udało się zmienić hasła" + err.response.status);
+          }
         });
     } else {
-      createNotification("error", "Hasło nie może być puste");
+      createNotification("Hasło nie może być puste!");
     }
   };
 

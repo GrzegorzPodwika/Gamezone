@@ -1,6 +1,6 @@
 import React, {useContext, useState} from "react";
 import {Button, Dropdown, Form} from "semantic-ui-react";
-import {createNotification} from "../../helpers/Notification";
+import {createNotification, NOTIFICATION} from "../../helpers/Notification";
 import "antd/dist/antd.css";
 import {DatePicker} from "antd";
 import {TYPES} from "../../helpers/GameType";
@@ -47,19 +47,19 @@ function AddGame() {
 
     const validateGameData = () => {
         if (gameData.title.length <= 0) {
-            createNotification("error", "Tytuł jest wymagany");
+            createNotification("Tytuł jest wymagany");
             return false;
         } else if (gameData.type.length <= 0) {
-            createNotification("error", "Gatunek jest wymagany");
+            createNotification("Gatunek jest wymagany");
             return false;
         } else if (gameData.platform.length <= 0) {
-            createNotification("error", "Platforma jest wymagana");
+            createNotification("Platforma jest wymagana");
             return false;
         } else if (gameData.date.length <= 0) {
-            createNotification("error", "Data jest wymagana");
+            createNotification( "Data jest wymagana");
             return false;
         } else if (gameData.url.length <= 0) {
-            createNotification("error", "Url zdjęcia jest wymagany!");
+            createNotification("Url zdjęcia jest wymagany!");
             return false;
         }
         return true;
@@ -72,15 +72,19 @@ function AddGame() {
                 .then((res) => res.data)
                 .then((res) => {
                     if (res !== null) {
-                        createNotification("info", "Gra została pomyślnie dodana");
+                        createNotification( "Gra została pomyślnie dodana", NOTIFICATION.INFO);
                         clearFields()
                     } else {
-                        createNotification("error", "Wystąpił błąd");
+                        createNotification("Wystąpił błąd podczas dodawania gry");
                     }
                 })
                 .catch((err) => {
-                    console.log(err);
-                    createNotification("error", "Error " + err);
+                    if (err.response !== undefined) {
+                        if(err.response.data.message !== undefined)
+                            createNotification(err.response.data.message);
+                        else
+                            createNotification("Wystąpił błąd podczas dodawania gry" + err.response.status);
+                    }
                 });
         }
     };
